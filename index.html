@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMHအိမ်သုံးစရိတ်</title>
+<audio id="background-music" src="MMH.mp3" loop></audio>
+
+<button id="play-music-btn" class="fixed bottom-24 right-4 z-50 p-3 bg-gray-800 text-white rounded-full shadow-lg">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.923a.75.75 0 01-.142 1.06l-3.114 3.115a.75.75 0 01-1.06 0L10.057 7.06a.75.75 0 01.142-1.06L13.171 2.89a.75.75 0 011.06 0l3.114 3.114zM12.924 15.077a.75.75 0 01-.142 1.06l-3.114 3.114a.75.75 0 01-1.06 0L5.057 16.06a.75.75 0 01.142-1.06l3.114-3.114a.75.75 0 011.06 0l3.114 3.114zM12 12a1 1 0 110-2 1 1 0 010 2zM6 12a1 1 0 110-2 1 1 0 010 2zM18 12a1 1 0 110-2 1 1 0 010 2z" />
+    </svg>
+</button>
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <head>
+    <link href=​"https://i.imgur.com/k6lP0a1.png" alt="Permanent Marker font example" width="900">
+    <style>
+        /* CSS styles များသည် loading မြန်ဆန်စေရန်အတွက် အနည်းဆုံး ပမာဏဖြင့် ရေးသားထားပါသည်။ */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #e0f7fa; /* Light cyan background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2px;
+            box-sizing: border-box;
+        }
+        #app-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            max-height: 820px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        .main-header {
+            background: linear-gradient(135deg, #008000, #FF0000, #0000FF, #FFFF00, #800080); /* Blue to teal gradient */
+            color: white;
+            padding: 0px 30px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1px;
+        }
+        .balance-card-container {
+            width: 100%;
+        }
+        #balance-card {
+    background-color: #1a237e; /* နောက်ခံကို မည်းနက်ရောင်ပြောင်းလိုက်ပါတယ် */
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+#total-balance {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 0px;
+    letter-spacing: -1px;
+    color: #008000; 
+}
+/* ဒီ code အသစ်ကို အစားထိုးထည့်သွင်းပါ */
+#total-balance.glitter-active {
+    animation: none; /* အရင်က animation ကို ပယ်ဖျက်လိုက်ပါ */
+}
+
+#total-balance span.glitter-active {
+    animation: glitter 0.7s infinite ease-in-out;
+}
+
+        .screen {
+            display: none;
+            flex-grow: 1;
+            padding: 0px;
+            padding-bottom: 150px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+        .fixed-nav-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+        .nav-button {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 0;
+            color: #800080; /* Light grey for inactive */
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
+            border-radius: 16px;
+        }
+        .nav-button.active {
+            color: #008000; /* Active color */
+            background-color: #f0f4f7;
+            transform: translateY(-10px);
+        }
+        .nav-button svg {
+            width: 30px;
+            height: 30px;
+            margin-bottom: 4px;
+        }
+        input, select, textarea {
+            border: 1px solid #e0e0e0;
+            background-color: #f7f9fc;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        .transaction-item, .category-item {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+        .transaction-item:hover, .category-item:hover {
+            transform: translateY(-2px);
+        }
+        .bottom-space-indicator {
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #90a4ae;
+            font-size: 0.8rem;
+            margin-top: 20px;
+        }
+        #loading-overlay {
+            transition: opacity 0.5s ease-in-out;
+        }
+        #transaction-form button[type="submit"]:disabled {
+            background-color: #b0bec5;
+            cursor: not-allowed;
+        }
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border-left-color: #4a90e2; /* Spinner color */
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .circular-button {
+            width: 100px;
+            height: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5%;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .circular-button:hover {
+            transform: scale(1.05);
+        }
+        .circular-button .label {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-bottom: 2px;
+        }
+        .circular-button .value {
+            font-size: 0.85rem;
+            font-weight: 700;
+            word-break: break-all;
+            padding: 0 5px;
+        }
+        #selection-modal .bg-white {
+    max-height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+       #user-name-display {
+    font-family: 'Pacifico', cursive;
+    font-size: 1.5rem; 
+}
+       #user-name-display {
+    font-family: 'Pacifico', cursive;
+    font-size: 2.5rem;
+    text-transform: uppercase; /* ဒီ code ကို ထပ်ထည့်လိုက်ပါ */
+}
+       #username-modal .bg-white {
+    /* ... လက်ရှိ code များ ... */
+     background: linear-gradient(45deg, #FF6B6B, #F6F479, #93C6E7, #A0D8B3);
+}
+ @keyframes glitter {
+    0% { color: #ff0000; text-shadow: 0 0 5px #ff0000, 0 0 10px #ff5500; }  /* အနီရောင် */
+    16% { color: #ff5500; text-shadow: 0 0 5px #ff5500, 0 0 10px #ffaa00; }  /* လိမ္မော်ရောင် */
+    33% { color: #ffff00; text-shadow: 0 0 5px #ffff00, 0 0 10px #aaff00; }  /* အဝါရောင် */
+    50% { color: #00ff00; text-shadow: 0 0 5px #00ff00, 0 0 10px #00ffaa; }  /* အစိမ်းရောင် */
+    66% { color: #00aaff; text-shadow: 0 0 5px #00aaff, 0 0 10px #0055ff; }  /* အပြာရောင် */
+    83% { color: #0000ff; text-shadow: 0 0 5px #0000ff, 0 0 10px #aa00ff; }  /* အပြာနုရောင် */
+    100% { color: #ff00ff; text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff0055; } /* ခရမ်းရောင် */
+}
+
+
+        #total-balance.glitter-active {
+            animation: glitter 1.5s infinite ease-in-out;
+        }
+
+        /* Balance card style adjust */
+        #balance-card {
+            background-color: #000000;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        
+        #total-balance {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-top: 0px;
+            letter-spacing: -1px;
+            /* Default color, will be overridden by glitter effect */
+        }
+        #balance-card {
+    /* Existing styles */
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    
+    /* New: Kanoke Pattern */
+    background-image: url('https://img.pikbest.com/origin/06/31/01/20rpIkbEsTgBk.png!sw800');
+    background-repeat: no-repeat;
+    background-size: 120% 230%; /* Puts the image inside the border */
+    background-position: center;
+    background-blend-mode: multiply; /* Make the pattern darker */
+    
+    /* Add a small padding to make the border visible */
+    padding: 22px; 
+}
+
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <div class="main-header">
+            <div class="user-info">
+                <div>
+                    <div id="user-name-display" class="text-2xl font-bold">NAME</div>
+                    <div id="user-id-display" class="text-xs text-white opacity-80 mt-1"></div>
+                </div>
+                <button id="edit-user-btn" class="flex items-center space-x-2 p-2 bg-white bg-opacity-30 text-white rounded-full shadow-md hover:bg-opacity-40 transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 19.5a.75.75 0 01.75-.75h14.5a.75.75 0 01.75.75v1.25a.75.75 0 01-.75.75H5.251a.75.75 0 01-.75-.75v-1.25z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="balance-card-container">
+                <div id="balance-card">
+                    <div class="text-center text-sm opacity-90 mb-1 text-gray-500">လက်ကျန်ငွေ</div>
+                    <div id="total-balance" class="font-extrabold text-gray-900 text-4xl">၀.၀၀ </div>
+                </div>
+            </div>
+        </div>
+       
+        <div id="loading-overlay" class="absolute inset-0 bg-white bg-opacity-80 flex flex-col items-center justify-center rounded-2xl z-20">
+            <div class="spinner"></div>
+            <p id="loading-text" class="mt-4 text-gray-600 font-medium">Loading...</p>
+        </div>
+
+        <div id="dashboard-screen" class="screen active">
+            <div class="bg-gray-100 p-4 rounded-xl shadow-sm my-4">
+                <h3 class="text-lg font-semibold mb-2 text-gray-800">ယနေ့အတွက်</h3>
+                <p class="text-gray-700 mb-1">ဝင်ငွေ: <span id="daily-income" class="font-semibold text-green-600">၀.၀၀ ကျပ်</span></p>
+                <p class="text-gray-700">ထွက်ငွေ: <span id="daily-expense" class="font-semibold text-red-600">၀.၀၀ ကျပ်</span></p>
+            </div>
+            <h2 class="text-xl font-semibold mb-4 text-gray-800 mt-12">မကြာသေးမီက မှတ်တမ်းများ</h2>
+            <div id="recent-transactions" class="space-y-4 flex-grow">
+                <p class="text-gray-500 text-center mt-8">မှတ်တမ်းများ မရှိသေးပါ</p>
+            </div>
+            <div class="bottom-space-indicator"></div>
+        </div>
+
+        <div id="add-transaction-screen" class="screen">
+            <h2 class="text-xl font-semibold mb-6 text-gray-800">ဝင်ငွေ/ထွက်ငွေ ထည့်သွင်းရန်</h2>
+            <div class="flex justify-around items-center w-full my-6">
+                <button id="select-type-btn" class="circular-button bg-blue-500">
+                    <span class="label">အမျိုးအစား</span>
+                    <span id="selected-type-value" class="value">ထွက်ငွေ</span>
+                </button>
+                <button id="select-category-btn" class="circular-button bg-green-500">
+                    <span class="label">အမျိုးအစားခွဲ</span>
+                    <span id="selected-category-value" class="value">ရွေးပါ</span>
+                </button>
+                <button id="select-date-btn" class="circular-button bg-orange-500">
+                    <span class="label">ရက်စွဲ</span>
+                    <span id="selected-date-value" class="value">ယနေ့</span>
+                </button>
+            </div>
+            <form id="transaction-form" class="space-y-5">
+    <div>
+        <label for="transaction-amount" class="block text-sm font-medium text-gray-700 mb-1">ပမာဏ (ကျပ်)</label>
+        <input type="number" id="transaction-amount" placeholder="ဥပမာ: ၅၀၀၀" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-blue-400 focus:border-blue-400 shadow-sm" required>
+    </div>
+
+    <div class="flex items-end space-x-4">
+        <div class="flex-grow">
+            <label for="transaction-description" class="block text-sm font-medium text-gray-700 mb-1">ဖော်ပြချက် (optional)</label>
+            <textarea id="transaction-description" rows="2" placeholder="ဥပမာ: မနက်စာ ထမင်းကြော်" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-blue-400 focus:border-blue-400 shadow-sm"></textarea>
+        </div>
+        <button type="submit" class="w-auto py-6 px-6 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-xl shadow-lg hover:from-blue-600 hover:to-teal-600 transition duration-300">
+            {✓}
+        </button>
+    </div>
+</form>
+            <div class="bottom-space-indicator"></div>
+        </div>
+
+        <div id="transactions-list-screen" class="screen">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">မှတ်တမ်းများ အားလုံး</h2>
+            <div class="mb-4 flex space-x-2">
+                <select id="filter-month" class="p-2 border border-gray-300 rounded-lg text-sm">
+                    <option value="">လ အားလုံး</option>
+                </select>
+                <select id="filter-category" class="p-2 border border-gray-300 rounded-lg text-sm flex-grow">
+                    <option value="">အမျိုးအစား အားလုံး</option>
+                </select>
+            </div>
+            <div id="all-transactions" class="space-y-4 flex-grow">
+                <p class="text-gray-500 text-center mt-8">မှတ်တမ်းများ မရှိသေးပါ</p>
+            </div>
+            <div class="bottom-space-indicator"></div>
+        </div>
+
+        <div id="reports-screen" class="screen">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">အစီရင်ခံစာများ</h2>
+            <div class="mb-4">
+                <label for="report-month-select" class="block text-sm font-medium text-gray-700 mb-1">လ ရွေးချယ်ပါ</label>
+                <select id="report-month-select" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-blue-400 focus:border-blue-400 shadow-sm">
+                </select>
+            </div>
+            <div class="bg-blue-50 p-4 rounded-xl shadow-sm mb-4">
+                <h3 class="text-lg font-medium text-gray-800 mb-2">လစဉ် ခြုံငုံသုံးသပ်ချက်</h3>
+                <p class="text-gray-700 mb-1">ဝင်ငွေစုစုပေါင်း: <span id="report-total-income" class="font-semibold text-green-600">၀.၀၀ ကျပ်</span></p>
+                <p class="text-gray-700">ထွက်ငွေစုစုပေါင်း: <span id="report-total-expense" class="font-semibold text-red-600">၀.၀၀ ကျပ်</span></p>
+            </div>
+            <h3 class="text-lg font-medium text-gray-800 mb-3">အမျိုးအစားအလိုက် ထွက်ငွေ</h3>
+            <div id="category-expense-chart" class="w-full h-48 bg-gray-50 rounded-xl flex items-center justify-center text-gray-500">
+                <p>အချက်အလက် မရှိသေးပါ</p>
+            </div>
+            <div id="category-expense-list" class="mt-4 space-y-2">
+            </div>
+            <div class="bottom-space-indicator"></div>
+        </div>
+
+        <div id="categories-screen" class="screen">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">အမျိုးအစားများ စီမံခန့်ခွဲရန်</h2>
+            <div class="mb-4 flex items-center space-x-2">
+                <input type="text" id="new-category-input" placeholder="အမျိုးအစားအသစ် ထည့်ပါ" class="flex-grow p-3 border border-gray-300 rounded-xl focus:ring-blue-400 focus:border-blue-400 shadow-sm">
+                <button id="add-category-btn" class="p-3 bg-blue-500 text-white rounded-xl shadow-md hover:bg-blue-600 transition duration-300">
+                  ✓
+                </button>
+            </div>
+            <div id="category-list" class="space-y-3 flex-grow">
+            </div>
+            <div class="bottom-space-indicator">p</div>
+        </div>
+
+        <div class="fixed-nav-bar flex justify-around bg-white border-t border-gray-200 p-2 shadow-lg rounded-t-2xl">
+            <button class="nav-button active" data-screen="dashboard-screen">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125h9.75a1.125 1.125 0 001.125-1.125V9.75M8.25 21h8.25" />
+                </svg>
+                <span>ပင်မ</span>
+            </button>
+            <button class="nav-button" data-screen="add-transaction-screen">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>ထည့်သွင်း</span>
+            </button>
+            <button class="nav-button" data-screen="transactions-list-screen">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 21h2.25m-1.5-18v2.25m-3.75 9h1.5m-1.5 3H12M9 16.5h3.75m-9 .75h9.75A2.25 2.25 0 0021 17.25V6.75A2.25 2.25 0 0018.75 4.5H5.25A2.25 2.25 0 003 6.75v10.5A2.25 2.25 0 005.25 19.5z" />
+                </svg>
+                <span>မှတ်တမ်း</span>
+            </button>
+            <button class="nav-button" data-screen="reports-screen">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
+                </svg>
+                <span>အစီရင်ခံစာ</span>
+            </button>
+            <button class="nav-button" data-screen="categories-screen">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.124A2.25 2.25 0 012.25 18V21m12.75-18v2.25c0 .621.504 1.125 1.125 1.125H21a2.25 2.25 0 012.25 2.25v1.372c0 .516-.351.966-.852 1.106a8.967 8.967 0 01-4.486 0 2.25 2.25 0 00-.852-1.106V6.75c0-.621-.504-1.125-1.125-1.125h-1.5zm-6 11.25l.896-1.436A4.5 4.5 0 0011.5 15h1.5a4.5 4.5 0 00-.896-1.436L9.53 16.122zm-2.25-5.622a4.5 4.5 0 00-5.78 1.124 2.25 2.25 0 01-1.124-.574V7.5c0-1.036.84-1.875 1.875-1.875h.375m9 1.5l.896-1.436A4.5 4.5 0 0018.5 15h1.5a4.5 4.5 0 00-.896-1.436L16.78 10.5zm-2.25-5.622a4.5 4.5 0 00-5.78 1.124 2.25 2.25 0 01-1.124-.574V7.5c0-1.036.84-1.875 1.875-1.875h.375" />
+                </svg>
+                <span>အမျိုးအစား</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="custom-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm">
+            <h3 id="modal-title" class="text-xl font-semibold mb-4 text-gray-800"></h3>
+            <p id="modal-message" class="text-gray-700 mb-6"></p>
+            <div class="flex justify-end space-x-3">
+                <button id="modal-cancel-btn" class="px-5 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition duration-300">မလုပ်တော့ပါ</button>
+                <button id="modal-confirm-btn" class="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300">ဖျက်မည်</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="selection-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm">
+            <h3 id="selection-modal-title" class="text-xl font-semibold mb-4 text-gray-800"></h3>
+            <div id="selection-modal-content" class="space-y-3"></div>
+            <div class="flex justify-end mt-6">
+                <button id="selection-modal-close" class="px-5 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition duration-300">ပိတ်မည်</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="username-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm">
+            <h3 class="text-xl font-semibold mb-4 text-gray-800"></h3>
+            <p class="text-gray-700 mb-4">(Nickname) ကို ထည့်သွင်းပါ။</p>
+            <input type="text" id="username-input" placeholder="အုပ်စုအမည်" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-blue-400 focus:border-blue-400 shadow-sm mb-4">
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-username-btn" class="px-5 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition duration-300">ပယ်ဖျက်မည်</button>
+                <button id="save-username-btn" class="px-5 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script defer>
+        /*
+            *** ဤ Web App ကို ပိုမိုမြန်ဆန်အောင် ဖန်တီးထားပုံ ***
+
+            ၁. Vanilla JS နှင့် CDN Links
+            - ဤ App သည် build process ရှုပ်ထွေးသော React.js, Next.js ကဲ့သို့သော Framework များကို ရှောင်ရှားထားပါသည်။
+            - Firebase library များနှင့် Tailwind CSS တို့ကို CDN (Content Delivery Network) မှတဆင့် တိုက်ရိုက် load လုပ်ပါသည်။
+            - အကျိုးကျေးဇူး: သုံးစွဲသူ၏ browser သည် ဤ links များကို cache လုပ်ထားပါက နောက်တစ်ခေါက် ဖွင့်ချိန်တွင် ထပ် download လုပ်ရန် မလိုတော့ပါ။ build process မရှိသည့်အတွက် code ကို minify, bundle လုပ်စရာမလိုဘဲ တိုက်ရိုက် run နိုင်သောကြောင့် loading time သိသိသာသာ လျော့ကျစေပါသည်။
+
+            ၂. Firebase Firestore Database
+            - အချက်အလက်များကို Firebase Firestore ဟုခေါ်သော real-time cloud database တွင် သိမ်းဆည်းပါသည်။
+            - အကျိုးကျေးဇူး: Firebase ရဲ့ onSnapshot() function ကို အသုံးပြုထားသောကြောင့် database မှ အချက်အလက်များ အပြောင်းအလဲရှိသည်နှင့် App ရဲ့ UI ကို ချက်ချင်း update လုပ်ပေးပါသည်။ ထို့ကြောင့် သုံးစွဲသူသည် loading bar ကို ကြာကြာစောင့်ဆိုင်းရန် မလိုအပ်ဘဲ မြန်ဆန်သော အတွေ့အကြုံကို ရရှိပါသည်။
+
+            ၃. Tailwind CSS (Just-in-Time Mode)
+            - UI design အတွက် Tailwind CSS ကို CDN link ဖြင့် အသုံးပြုထားပါသည်။
+            - အကျိုးကျေးဇူး: ဤနည်းလမ်းသည် App တွင် တကယ်လိုအပ်သော CSS styles များကိုသာ dynamically generate လုပ်ပေးပါသည်။ ထို့ကြောင့် CSS file size သေးငယ်ပြီး မြန်မြန်ဆန်ဆန် loading လုပ်နိုင်ကာ UI ကို ချက်ချင်းမြင်ရစေပါသည်။
+
+            အတိုချုပ်အားဖြင့်၊ ဤ App သည် "Simple Stack for Maximum Performance" (အမြန်ဆုံးစွမ်းဆောင်ရည်အတွက် ရိုးရှင်းသည့် နည်းပညာများ) ကို အသုံးပြုထားသောကြောင့် build process မရှိခြင်း၊ code base သေးငယ်ခြင်းနှင့် real-time data fetching တို့ကြောင့် သာမန် web app တွေထက် သိသိသာသာ မြန်ဆန်နေခြင်း ဖြစ်ပါသည်။
+        */
+        
+        // DOM Elements
+        const totalBalanceEl = document.getElementById('total-balance');
+        const screens = document.querySelectorAll('.screen');
+        const navButtons = document.querySelectorAll('.nav-button');
+        const transactionForm = document.getElementById('transaction-form');
+        const transactionAmountEl = document.getElementById('transaction-amount');
+        const transactionDescriptionEl = document.getElementById('transaction-description');
+        const recentTransactionsEl = document.getElementById('recent-transactions');
+        const allTransactionsEl = document.getElementById('all-transactions');
+        const filterMonthEl = document.getElementById('filter-month');
+        const filterCategoryEl = document.getElementById('filter-category');
+        const reportMonthSelectEl = document.getElementById('report-month-select');
+        const reportTotalIncomeEl = document.getElementById('report-total-income');
+        const reportTotalExpenseEl = document.getElementById('report-total-expense');
+        const categoryExpenseChartEl = document.getElementById('category-expense-chart');
+        const categoryExpenseListEl = document.getElementById('category-expense-list');
+        const newCategoryInput = document.getElementById('new-category-input');
+        const addCategoryBtn = document.getElementById('add-category-btn');
+        const categoryListEl = document.getElementById('category-list');
+        const customModal = document.getElementById('custom-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+        const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const loadingText = document.getElementById('loading-text');
+        const userNameDisplay = document.getElementById('user-name-display');
+        const userIdDisplay = document.getElementById('user-id-display');
+        const editUserBtn = document.getElementById('edit-user-btn');
+        const usernameModal = document.getElementById('username-modal');
+        const usernameInput = document.getElementById('username-input');
+        const saveUsernameBtn = document.getElementById('save-username-btn');
+        const cancelUsernameBtn = document.getElementById('cancel-username-btn');
+        const transactionSubmitBtn = document.querySelector('#transaction-form button[type="submit"]');
+
+        // New: Daily Summary DOM Elements
+        const dailyIncomeEl = document.getElementById('daily-income');
+        const dailyExpenseEl = document.getElementById('daily-expense');
+        
+        // New: UI elements for add-transaction screen
+        const selectTypeBtn = document.getElementById('select-type-btn');
+        const selectedTypeValue = document.getElementById('selected-type-value');
+        const selectCategoryBtn = document.getElementById('select-category-btn');
+        const selectedCategoryValue = document.getElementById('selected-category-value');
+        const selectDateBtn = document.getElementById('select-date-btn');
+        const selectedDateValue = document.getElementById('selected-date-value');
+        const selectionModal = document.getElementById('selection-modal');
+        const selectionModalTitle = document.getElementById('selection-modal-title');
+        const selectionModalContent = document.getElementById('selection-modal-content');
+        const selectionModalClose = document.getElementById('selection-modal-close');
+        
+        // Global data and state
+        let db = null;
+        let auth = null;
+        let userId = null;
+        let groupId = null;
+        let username = 'ဧည့်သည်';
+        let transactions = [];
+        let categories = [];
+        let confirmActionCallback = null;
+        let authReady = false;
+        let transactionUnsubscribe = null;
+        let categoriesUnsubscribe = null;
+
+        // New: State for the new input method
+        let selectedTransactionType = 'expense'; // default
+        let selectedTransactionCategory = '';
+        let selectedTransactionDate = getCurrentDate();
+        
+        // Firebase Configuration (DO NOT CHANGE)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCbXKrJ-4XlafXS9glgys9T5d9ZNSYjwWM",
+            authDomain: "mmh-fe555.firebaseapp.com",
+            projectId: "mmh-fe555",
+            storageBucket: "mmh-fe555.firebasestorage.app",
+            messagingSenderId: "174472059635",
+            appId: "1:174472059635:web:f1558d060d3107f99d7586",
+            measurementId: "G-5N8J1MQKFR"
+        };
+        const appId = "mmh-fe555";
+
+        // --- Utility Functions ---
+        function formatCurrency(amount) {
+            return `${amount.toLocaleString()} `;
+        }
+
+        function getCurrentDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        function getYesterdayDate() {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const year = yesterday.getFullYear();
+            const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+            const day = String(yesterday.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        function getMyanmarMonthName(monthIndex) {
+            const months = [
+                'ဇန်နဝါရီ', 'ဖေဖော်ဝါရီ', 'မတ်', 'ဧပြီ', 'မေ', 'ဇွန်',
+                'ဇူလိုင်', 'သြဂုတ်', 'စက်တင်ဘာ', 'အောက်တိုဘာ', 'နိုဝင်ဘာ', 'ဒီဇင်ဘာ'
+            ];
+            return months[monthIndex];
+        }
+
+        // --- UI Management ---
+        function showScreen(screenId) {
+            if (screenId === 'add-transaction-screen' || screenId === 'categories-screen') {
+                if (!groupId) {
+                    showCustomModal('သတိပေးချက်', 'မှတ်တမ်းမထည့်မီ အုပ်စုအမည်ကို အရင်သတ်မှတ်ပါ။', showUsernameModal, () => { showScreen('dashboard-screen') });
+                    return;
+                }
+            }
+
+            screens.forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+
+            navButtons.forEach(button => {
+                if (button.dataset.screen === screenId) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+
+            if (screenId === 'add-transaction-screen') {
+                updateAddTransactionScreenUI();
+            } else if (screenId === 'transactions-list-screen') {
+                populateFilterMonths();
+                populateFilterCategories();
+                renderAllTransactions();
+            } else if (screenId === 'reports-screen') {
+                populateReportMonths();
+                updateReports();
+            } else if (screenId === 'categories-screen') {
+                renderCategoryList();
+            }
+        }
+        
+        function updateAddTransactionScreenUI() {
+            selectedTypeValue.textContent = selectedTransactionType === 'expense' ? 'ထွက်ငွေ' : 'ဝင်ငွေ';
+            selectedCategoryValue.textContent = selectedTransactionCategory || 'ရွေးပါ';
+            
+            const displayDate = new Date(selectedTransactionDate);
+            const today = new Date();
+            const yesterday = new Date();
+            yesterday.setDate(today.getDate() - 1);
+
+            let dateText = selectedTransactionDate;
+            if (displayDate.toDateString() === today.toDateString()) {
+                dateText = 'ယနေ့';
+            } else if (displayDate.toDateString() === yesterday.toDateString()) {
+                dateText = 'မနေ့က';
+            }
+            selectedDateValue.textContent = dateText;
+        }
+
+                                function updateTotalBalance() {
+            let totalIncome = 0;
+            let totalExpense = 0;
+
+            transactions.forEach(t => {
+                if (t.type === 'income') {
+                    totalIncome += t.amount;
+                } else {
+                    totalExpense += t.amount;
+                }
+            });
+
+            const balance = totalIncome - totalExpense;
+            const formattedBalance = formatCurrency(balance);
+
+            // လက်ရှိ HTML ကို ရှင်းလင်းလိုက်ပါ
+            totalBalanceEl.innerHTML = '';
+            
+            // ဂဏန်းတလုံးချင်းစီကို စစ်ဆေးပြီး သီးခြား animation ပေးပါ
+            for (let i = 0; i < formattedBalance.length; i++) {
+                const char = formattedBalance[i];
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.style.animationDelay = `${i * 0.1}s`; // တစ်လုံးချင်းစီအတွက် animation delay ပေးပါ
+
+                // အရောင်နဲ့ glitter effect ထည့်သွင်းပါ
+                if (balance > 0) {
+                    span.classList.add('glitter-active', 'text-green-600');
+                } else if (balance < 0) {
+                    span.classList.add('text-red-600');
+                } else {
+                    span.classList.add('text-gray-900');
+                }
+
+                totalBalanceEl.appendChild(span);
+            }
+        }
+
+
+
+        // New function to update the daily summary
+        function updateDailySummary() {
+            const today = getCurrentDate();
+            let dailyIncome = 0;
+            let dailyExpense = 0;
+
+            transactions.forEach(t => {
+                if (t.date === today) {
+                    if (t.type === 'income') {
+                        dailyIncome += t.amount;
+                    } else {
+                        dailyExpense += t.amount;
+                    }
+                }
+            });
+
+            dailyIncomeEl.textContent = formatCurrency(dailyIncome);
+            dailyExpenseEl.textContent = formatCurrency(dailyExpense);
+        }
+
+        function renderRecentTransactions() {
+            recentTransactionsEl.innerHTML = '';
+            if (transactions.length === 0) {
+                recentTransactionsEl.innerHTML = '<p class="text-gray-500 text-center mt-8">မှတ်တမ်းများ မရှိသေးပါ</p>';
+                return;
+            }
+
+            transactions.slice(0, 5).forEach(t => {
+                const transactionItem = document.createElement('div');
+                transactionItem.classList.add('transaction-item', 'flex', 'justify-between', 'items-center', 'p-4');
+                const amountClass = t.type === 'income' ? 'text-green-600' : 'text-red-600';
+                const sign = t.type === 'income' ? '+' : '-';
+
+                transactionItem.innerHTML = `
+                    <div>
+                        <div class="font-medium text-gray-800">${t.category}</div>
+                        <div class="text-xs text-gray-500">${t.description || 'ဖော်ပြချက် မရှိပါ'}</div>
+                        <div class="text-xs text-gray-400">${t.date}</div>
+                    </div>
+                    <div class="font-semibold ${amountClass}">${sign} ${formatCurrency(t.amount)}</div>
+                `;
+                recentTransactionsEl.appendChild(transactionItem);
+            });
+        }
+
+        function renderAllTransactions() {
+            allTransactionsEl.innerHTML = '';
+            let filteredTransactions = transactions;
+
+            const selectedMonth = filterMonthEl.value;
+            const selectedCategory = filterCategoryEl.value;
+
+            if (selectedMonth) {
+                filteredTransactions = filteredTransactions.filter(t => {
+                    const transactionDate = new Date(t.date);
+                    const transactionMonth = transactionDate.getMonth();
+                    const transactionYear = transactionDate.getFullYear();
+                    const [filterYear, filterMonth] = selectedMonth.split('-').map(Number);
+                    return transactionMonth === filterMonth && transactionYear === filterYear;
+                });
+            }
+
+            if (selectedCategory) {
+                filteredTransactions = filteredTransactions.filter(t => t.category === selectedCategory);
+            }
+
+            if (filteredTransactions.length === 0) {
+                allTransactionsEl.innerHTML = '<p class="text-gray-500 text-center mt-8">မှတ်တမ်းများ မရှိသေးပါ</p>';
+                return;
+            }
+
+            const groupedTransactions = filteredTransactions.reduce((acc, t) => {
+                const date = t.date;
+                if (!acc[date]) {
+                    acc[date] = [];
+                }
+                acc[date].push(t);
+                return acc;
+            }, {});
+
+            const sortedDates = Object.keys(groupedTransactions).sort((a, b) => new Date(b) - new Date(a));
+
+            sortedDates.forEach(date => {
+                const dateHeader = document.createElement('div');
+                dateHeader.classList.add('text-sm', 'font-semibold', 'text-gray-600', 'mt-4', 'mb-2', 'border-b', 'pb-1');
+                dateHeader.textContent = date;
+                allTransactionsEl.appendChild(dateHeader);
+
+                groupedTransactions[date].forEach(t => {
+                    const transactionItem = document.createElement('div');
+                    transactionItem.classList.add('transaction-item', 'flex', 'justify-between', 'items-center', 'p-4');
+                    const amountClass = t.type === 'income' ? 'text-green-600' : 'text-red-600';
+                    const sign = t.type === 'income' ? '+' : '-';
+
+                    transactionItem.innerHTML = `
+                        <div>
+                            <div class="font-medium text-gray-800">${t.category}</div>
+                            <div class="text-xs text-gray-500">${t.description || 'ဖော်ပြချက် မရှိပါ'}</div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="font-semibold ${amountClass}">${sign} ${formatCurrency(t.amount)}</div>
+                            <button data-id="${t.id}" class="delete-transaction-btn text-red-500 hover:text-red-700 p-1 rounded-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.927a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m-1.022.165L5.67 19.673a2.25 2.25 0 002.244 2.077h8.927a2.25 2.25 0 002.244-2.077L19.5 5.79m-9.444.114c-.276-.053-.55-.108-.822-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.14-2.006-2.201C16.152 2.15 15.174 2.1 12 2.1c-3.174 0-4.152.05-4.444.093C6.106 2.45 5.25 3.42 5.25 4.5V5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m-1.022.165L5.67 19.673a2.25 2.25 0 002.244 2.077h8.927a2.25 2.25 0 002.244-2.077L19.5 5.79" />
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    allTransactionsEl.appendChild(transactionItem);
+                });
+            });
+
+            document.querySelectorAll('.delete-transaction-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const transactionId = e.currentTarget.dataset.id;
+                    showCustomModal(
+                        'ဖျက်မည်လား',
+                        'ဤမှတ်တမ်းကို ဖျက်ရန် သေချာပါသလား။',
+                        () => deleteTransaction(transactionId),
+                        () => {}
+                    );
+                });
+            });
+        }
+
+        async function deleteTransaction(id) {
+            try {
+                if (!authReady || !groupId) {
+                    showCustomModal('အမှား', 'ဒေတာ ဖျက်ခွင့် မရှိပါ။', () => {}, null);
+                    return;
+                }
+                const docRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId).collection('transactions').doc(id);
+                await docRef.delete();
+                console.log("Document successfully deleted!");
+            } catch (error) {
+                console.error("Error removing document: ", error);
+                showCustomModal('အမှား', 'မှတ်တမ်းဖျက်၍ မရပါ။ ကျေးဇူးပြု၍ ပြန်လည်စမ်းသပ်ပါ။', () => {}, null);
+            }
+        }
+        
+        function populateFilterCategories() {
+            filterCategoryEl.innerHTML = '';
+            const allOption = document.createElement('option');
+            allOption.value = '';
+            allOption.textContent = 'အမျိုးအစား အားလုံး';
+            filterCategoryEl.appendChild(allOption);
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                filterCategoryEl.appendChild(option);
+            });
+        }
+
+        function populateFilterMonths() {
+            filterMonthEl.innerHTML = '<option value="">လ အားလုံး</option>';
+            const monthsSet = new Set();
+            transactions.forEach(t => {
+                const date = new Date(t.date);
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                monthsSet.add(`${year}-${month}`);
+            });
+
+            const sortedMonths = Array.from(monthsSet).sort((a, b) => {
+                const [yearA, monthA] = a.split('-').map(Number);
+                const [yearB, monthB] = b.split('-').map(Number);
+                if (yearA !== yearB) return yearB - yearA;
+                return monthB - monthA;
+            });
+
+            sortedMonths.forEach(monthKey => {
+                const [year, monthIndex] = monthKey.split('-').map(Number);
+                const option = document.createElement('option');
+                option.value = monthKey;
+                option.textContent = `${getMyanmarMonthName(monthIndex)} ${year}`;
+                filterMonthEl.appendChild(option);
+            });
+        }
+
+        function populateReportMonths() {
+            reportMonthSelectEl.innerHTML = '';
+            const monthsSet = new Set();
+            transactions.forEach(t => {
+                const date = new Date(t.date);
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                monthsSet.add(`${year}-${month}`);
+            });
+
+            const sortedMonths = Array.from(monthsSet).sort((a, b) => {
+                const [yearA, monthA] = a.split('-').map(Number);
+                const [yearB, monthB] = b.split('-').map(Number);
+                if (yearA !== yearB) return yearB - yearA;
+                return monthB - monthA;
+            });
+
+            if (sortedMonths.length === 0) {
+                const currentMonth = new Date();
+                const currentYear = currentMonth.getFullYear();
+                const currentMonthIndex = currentMonth.getMonth();
+                const option = document.createElement('option');
+                option.value = `${currentYear}-${currentMonthIndex}`;
+                option.textContent = `${getMyanmarMonthName(currentMonthIndex)} ${currentYear}`;
+                reportMonthSelectEl.appendChild(option);
+            } else {
+                sortedMonths.forEach(monthKey => {
+                    const [year, monthIndex] = monthKey.split('-').map(Number);
+                    const option = document.createElement('option');
+                    option.value = monthKey;
+                    option.textContent = `${getMyanmarMonthName(monthIndex)} ${year}`;
+                    reportMonthSelectEl.appendChild(option);
+                });
+            }
+        }
+
+        function updateReports() {
+            const selectedMonthKey = reportMonthSelectEl.value;
+            if (!selectedMonthKey) {
+                reportTotalIncomeEl.textContent = formatCurrency(0);
+                reportTotalExpenseEl.textContent = formatCurrency(0);
+                categoryExpenseChartEl.innerHTML = '<p>အချက်အလက် မရှိသေးပါ</p>';
+                categoryExpenseListEl.innerHTML = '';
+                return;
+            }
+
+            const [selectedYear, selectedMonthIndex] = selectedMonthKey.split('-').map(Number);
+
+            const monthlyTransactions = transactions.filter(t => {
+                const date = new Date(t.date);
+                return date.getFullYear() === selectedYear && date.getMonth() === selectedMonthIndex;
+            });
+
+            let totalIncome = 0;
+            let totalExpense = 0;
+            const categoryExpenses = {};
+
+            monthlyTransactions.forEach(t => {
+                if (t.type === 'income') {
+                    totalIncome += t.amount;
+                } else {
+                    totalExpense += t.amount;
+                    categoryExpenses[t.category] = (categoryExpenses[t.category] || 0) + t.amount;
+                }
+            });
+
+            reportTotalIncomeEl.textContent = formatCurrency(totalIncome);
+            reportTotalExpenseEl.textContent = formatCurrency(totalExpense);
+
+            renderCategoryExpenseChart(categoryExpenses, totalExpense);
+            renderCategoryExpenseList(categoryExpenses);
+        }
+
+        function renderCategoryExpenseChart(data, totalExpense) {
+            categoryExpenseChartEl.innerHTML = '';
+            if (Object.keys(data).length === 0 || totalExpense === 0) {
+                categoryExpenseChartEl.innerHTML = '<p>အချက်အလက် မရှိသေးပါ</p>';
+                return;
+            }
+
+            const sortedCategories = Object.entries(data).sort(([, a], [, b]) => b - a);
+            const chartContainer = document.createElement('div');
+            chartContainer.classList.add('w-full', 'h-full', 'flex', 'flex-col', 'justify-end', 'p-2');
+
+            sortedCategories.forEach(([category, amount]) => {
+                const percentage = (amount / totalExpense) * 100;
+                const bar = document.createElement('div');
+                bar.classList.add('flex', 'items-center', 'mb-1');
+                bar.innerHTML = `
+                    <div class="text-xs text-gray-700 w-1/3 truncate">${category}</div>
+                    <div class="flex-grow bg-gray-200 rounded-full h-2 mx-2 overflow-hidden">
+                        <div class="bg-blue-500 h-full rounded-full" style="width: ${percentage.toFixed(0)}%;"></div>
+                    </div>
+                    <div class="text-xs font-medium text-gray-700 w-1/6 text-right">${percentage.toFixed(0)}%</div>
+                `;
+                chartContainer.appendChild(bar);
+            });
+            categoryExpenseChartEl.appendChild(chartContainer);
+        }
+
+        function renderCategoryExpenseList(data) {
+            categoryExpenseListEl.innerHTML = '';
+            if (Object.keys(data).length === 0) {
+                return;
+            }
+
+            const sortedCategories = Object.entries(data).sort(([, a], [, b]) => b - a);
+
+            sortedCategories.forEach(([category, amount]) => {
+                const listItem = document.createElement('div');
+                listItem.classList.add('transaction-item', 'flex', 'justify-between', 'items-center', 'p-3');
+                listItem.innerHTML = `
+                    <div class="font-medium text-gray-800">${category}</div>
+                    <div class="font-semibold text-red-600">${formatCurrency(amount)}</div>
+                `;
+                categoryExpenseListEl.appendChild(listItem);
+            });
+        }
+
+        function renderCategoryList() {
+            categoryListEl.innerHTML = '';
+            if (categories.length === 0) {
+                categoryListEl.innerHTML = '<p class="text-gray-500 text-center mt-8">အမျိုးအစားများ မရှိသေးပါ</p>';
+                return;
+            }
+            categories.forEach(cat => {
+                const categoryItem = document.createElement('div');
+                categoryItem.classList.add('category-item', 'flex', 'justify-between', 'items-center', 'p-4');
+                categoryItem.innerHTML = `
+                    <span class="font-medium text-gray-800">${cat}</span>
+                    <button data-category="${cat}" class="delete-category-btn text-red-500 hover:text-red-700 p-1 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.927a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m-1.022.165L5.67 19.673a2.25 2.25 0 002.244 2.077h8.927a2.25 2.25 0 002.244-2.077L19.5 5.79m-9.444.114c-.276-.053-.55-.108-.822-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.14-2.006-2.201C16.152 2.15 15.174 2.1 12 2.1c-3.174 0-4.152.05-4.444.093C6.106 2.45 5.25 3.42 5.25 4.5V5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m-1.022.165L5.67 19.673a2.25 2.25 0 002.244 2.077h8.927a2.25 2.25 0 002.244-2.077L19.5 5.79" />
+                        </svg>
+                    </button>
+                `;
+                categoryListEl.appendChild(categoryItem);
+            });
+
+            document.querySelectorAll('.delete-category-btn').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const categoryToDelete = e.currentTarget.dataset.category;
+                    showCustomModal(
+                        'ဖျက်မည်လား',
+                        `"${categoryToDelete}" အမျိုးအစားကို ဖျက်ရန် သေချာပါသလား။ ဤအမျိုးအစားဖြင့် မှတ်တမ်းတင်ထားသော အချက်အလက်များ ပြောင်းလဲမည် မဟုတ်ပါ။`,
+                        () => deleteCategory(categoryToDelete)
+                    );
+                });
+            });
+        }
+
+        async function deleteCategory(catToDelete) {
+            try {
+                if (!authReady || !groupId) {
+                    showCustomModal('အမှား', 'ဒေတာ ဖျက်ခွင့် မရှိပါ။', () => {}, null);
+                    return;
+                }
+                const categoriesRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId).collection('categories');
+                const q = categoriesRef.where("name", "==", catToDelete);
+                const querySnapshot = await q.get();
+                querySnapshot.forEach(async (d) => {
+                    await d.ref.delete();
+                });
+            } catch (error) {
+                console.error("Error deleting category: ", error);
+                showCustomModal('အမှား', 'အမျိုးအစား ဖျက်၍ မရပါ။ ကျေးဇူးပြု၍ ပြန်လည်စမ်းသပ်ပါ။', () => {}, null);
+            }
+        }
+
+        function showCustomModal(title, message, onConfirm, onCancel) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            customModal.classList.remove('hidden');
+            modalConfirmBtn.onclick = () => {
+                customModal.classList.add('hidden');
+                if (onConfirm) onConfirm();
+            };
+
+            if (onCancel) {
+                modalCancelBtn.style.display = 'inline-block';
+                modalCancelBtn.onclick = () => {
+                    customModal.classList.add('hidden');
+                    onCancel();
+                };
+            } else {
+                modalCancelBtn.style.display = 'none';
+            }
+        }
+
+        function showUsernameModal() {
+            usernameModal.classList.remove('hidden');
+        }
+
+        function hideUsernameModal() {
+            usernameModal.classList.add('hidden');
+        }
+
+        function showSelectionModal(title, content) {
+            selectionModalTitle.textContent = title;
+            selectionModalContent.innerHTML = content;
+            selectionModal.classList.remove('hidden');
+        }
+
+        function hideSelectionModal() {
+            selectionModal.classList.add('hidden');
+        }
+
+        function subscribeToData() {
+            if (!groupId) return;
+
+            if (transactionUnsubscribe) transactionUnsubscribe();
+            if (categoriesUnsubscribe) categoriesUnsubscribe();
+
+            const groupTransactionsCollection = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId).collection('transactions');
+            const groupCategoriesCollection = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId).collection('categories');
+
+            transactionUnsubscribe = groupTransactionsCollection.onSnapshot((querySnapshot) => {
+                transactions = [];
+                querySnapshot.forEach((d) => {
+                    const data = d.data();
+                    transactions.push({ id: d.id, ...data });
+                });
+                transactions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                updateAllUI();
+                console.log("Transactions updated for group:", groupId);
+            }, (error) => {
+                console.error("Error fetching transactions: ", error);
+            });
+
+            categoriesUnsubscribe = groupCategoriesCollection.onSnapshot((querySnapshot) => {
+                categories = [];
+                querySnapshot.forEach((d) => {
+                    categories.push(d.data().name);
+                });
+                if (categories.length === 0) {
+                    const defaultCats = ['အစားအသောက်', 'သယ်ယူပို့ဆောင်ရေး', 'အိမ်လခ', 'ဖျော်ဖြေရေး', 'ပညာရေး', 'ကျန်းမာရေး', 'အဝတ်အထည်', 'အလှူဒါန', 'အခြား'];
+                    defaultCats.forEach(async cat => {
+                        await groupCategoriesCollection.add({ name: cat });
+                    });
+                }
+                updateCategoriesUI();
+                console.log("Categories updated for group:", groupId);
+            }, (error) => {
+                console.error("Error fetching categories: ", error);
+            });
+        }
+
+        async function saveUsername() {
+            const newUsername = usernameInput.value.trim().toLowerCase();
+            if (!newUsername) {
+                showCustomModal('သတိပေးချက်', 'အုပ်စုအမည် (Nickname) ကို ထည့်သွင်းရန် လိုအပ်ပါသည်။', () => {}, null);
+                return;
+            }
+
+            try {
+                const groupDocRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(newUsername);
+                const groupDoc = await groupDocRef.get();
+
+                if (groupDoc.exists) {
+                    await groupDocRef.update({
+                        members: firebase.firestore.FieldValue.arrayUnion(userId)
+                    });
+                } else {
+                    await groupDocRef.set({
+                        owner: userId,
+                        members: [userId],
+                        createdAt: new Date().toISOString()
+                    });
+                }
+
+                groupId = newUsername;
+                username = newUsername;
+                localStorage.setItem('groupId', newUsername);
+                userIdDisplay.textContent = `ID:- ${groupId}`;
+                userNameDisplay.textContent = newUsername;
+                subscribeToData();
+                hideUsernameModal();
+                console.log("Username/Group saved successfully.");
+
+            } catch (error) {
+                console.error("Error saving username/group:", error);
+                showCustomModal('အမှား', 'အုပ်စုအမည်သိမ်း၍မရပါ။ ကျေးဇူးပြု၍ နောက်တစ်ကြိမ် ထပ်မံကြိုးစားပါ။', () => {}, null);
+            }
+        }
+
+        async function clearAllDataAndResetUser() {
+            showCustomModal(
+                'All Delete',
+                'သင်၏အုပ်စုနှင့်ပတ်သက်သော မှတ်တမ်းများ၊ အမျိုးအစားများအားလုံး လုံးဝဖျက်ပစ်မည်။ ဤလုပ်ဆောင်ချက်ကို ပြန်လည်ပြင်၍မရပါ။',
+                async () => {
+                    try {
+                        if (!groupId) {
+                           showCustomModal('သတိပေးချက်', 'ဖျက်စရာ အုပ်စုအချက်အလက်မရှိပါ။', () => {}, null);
+                           return;
+                        }
+
+                        const categoriesColRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId).collection('categories');
+                        const transactionsColRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId).collection('transactions');
+                        const groupDocRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId);
+
+                        const categoryDocs = await categoriesColRef.get();
+                        for (const d of categoryDocs.docs) { await d.ref.delete(); }
+
+                        const transactionDocs = await transactionsColRef.get();
+                        for (const d of transactionDocs.docs) { await d.ref.delete(); }
+
+                        await groupDocRef.delete();
+
+                        groupId = null;
+                        username = 'ဧည့်သည်';
+                        localStorage.removeItem('groupId');
+                        userNameDisplay.textContent = username;
+                        userIdDisplay.textContent = ' ID: ...';
+                        transactions = [];
+                        categories = [];
+                        updateAllUI();
+
+                        console.log("All group data successfully deleted.");
+                        hideUsernameModal();
+
+                    } catch (error) {
+                        console.error("Error clearing data:", error);
+                        showCustomModal('အမှား', 'အချက်အလက်များ ဖျက်၍မရပါ။ ကျေးဇူးပြု၍ နောက်တစ်ကြိမ် ထပ်မံကြိုးစားပါ။', () => {}, null);
+                    }
+                },
+                () => {
+                    hideUsernameModal();
+                }
+            );
+        }
+
+        function startApp() {
+            showScreen('dashboard-screen');
+            loadingOverlay.classList.add('hidden');
+            if (!groupId) {
+                showCustomModal('ကြိုဆိုပါတယ်', 'စတင်အသုံးပြုရန် အုပ်စုအမည်ကို သတ်မှတ်ပါ။', showUsernameModal, () => {});
+            } else {
+                updateAllUI();
+                updateCategoriesUI();
+            }
+        }
+
+        function updateAllUI() {
+            updateTotalBalance();
+            updateDailySummary();
+            renderRecentTransactions();
+            renderAllTransactions();
+            populateFilterMonths();
+            populateReportMonths();
+            updateReports();
+            updateAddTransactionScreenUI(); // New call
+        }
+
+        function updateCategoriesUI() {
+            populateFilterCategories();
+            renderCategoryList();
+        }
+
+        // Event Listeners
+        window.addEventListener('load', () => {
+            if (typeof firebase !== 'undefined' && typeof firebase.firestore !== 'undefined') {
+                try {
+                    const firebaseApp = firebase.initializeApp(firebaseConfig);
+                    db = firebase.firestore();
+                    auth = firebase.auth();
+                    db.settings({
+                        timestampsInSnapshots: true
+                    });
+                    
+                    auth.onAuthStateChanged(async (user) => {
+                        if (user) {
+                            userId = user.uid;
+                            authReady = true;
+
+                            const storedGroupId = localStorage.getItem('groupId');
+                            if (storedGroupId) {
+                                const groupDocRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(storedGroupId);
+                                const groupDoc = await groupDocRef.get();
+                                if (groupDoc.exists) {
+                                    groupId = storedGroupId;
+                                    username = storedGroupId;
+                                    userIdDisplay.textContent = `ID:- ${groupId}`;
+                                    userNameDisplay.textContent = username;
+                                } else {
+                                    localStorage.removeItem('groupId');
+                                }
+                            }
+
+                            if (groupId) {
+                                subscribeToData();
+                            }
+                            startApp();
+
+                        } else {
+                            try {
+                                await auth.signInAnonymously();
+                            } catch (error) {
+                                loadingText.textContent = 'လော့ဂ်အင်ဝင်၍ မရပါ။ ကျေးဇူးပြု၍ console ကိုစစ်ဆေးပါ။';
+                                console.error("Firebase Auth failed:", error);
+                            }
+                        }
+                    });
+
+                } catch (e) {
+                    loadingText.textContent = "Firebase အစပျိုးရာတွင် အမှားအယွင်းရှိပါသည်။ console ကိုစစ်ဆေးပါ။";
+                    console.error("Firebase initialization failed:", e);
+                }
+            } else {
+                loadingText.textContent = "Firebase script များ loading မလုပ်နိုင်ပါ။";
+            }
+        });
+
+        transactionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            transactionSubmitBtn.disabled = true;
+
+            try {
+                if (!authReady || !groupId) {
+                    showCustomModal('သတိပေးချက်', 'မှတ်တမ်းမထည့်မီ အုပ်စုအမည်ကို အရင်သတ်မှတ်ပါ။', showUsernameModal, () => { showScreen('dashboard-screen') });
+                    return;
+                }
+                const amount = parseFloat(transactionAmountEl.value);
+                const description = transactionDescriptionEl.value.trim();
+
+                if (isNaN(amount) || amount <= 0) {
+                    showCustomModal('အမှား', 'ပမာဏကို မှန်ကန်စွာ ထည့်သွင်းပါ။', () => {}, null);
+                    return;
+                }
+                if (!selectedTransactionCategory) {
+                    showCustomModal('အမှား', 'အမျိုးအစားကို ရွေးချယ်ပါ။', () => {}, null);
+                    return;
+                }
+
+                const newTransaction = {
+                    type: selectedTransactionType,
+                    amount,
+                    category: selectedTransactionCategory,
+                    date: selectedTransactionDate,
+                    description,
+                    timestamp: new Date().toISOString(),
+                    username: username
+                };
+
+                await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId).collection('transactions').add(newTransaction);
+                transactionForm.reset();
+                selectedTransactionType = 'expense';
+                selectedTransactionCategory = '';
+                selectedTransactionDate = getCurrentDate();
+                updateAddTransactionScreenUI();
+                showScreen('dashboard-screen');
+
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                showCustomModal('အမှား', 'မှတ်တမ်းတင်၍ မရပါ။ ကျေးဇူးပြု၍ ပြန်လည်စမ်းသပ်ပါ။', () => {}, null);
+            } finally {
+                transactionSubmitBtn.disabled = false;
+            }
+        });
+        
+        // Event listeners for the new circular buttons
+        selectTypeBtn.addEventListener('click', () => {
+            const content = `
+                <button class="w-full py-3 text-lg font-semibold rounded-lg text-white mb-3 ${selectedTransactionType === 'expense' ? 'bg-blue-600' : 'bg-blue-400'}" data-type="expense">ထွက်ငွေ</button>
+                <button class="w-full py-3 text-lg font-semibold rounded-lg text-white ${selectedTransactionType === 'income' ? 'bg-green-600' : 'bg-green-400'}" data-type="income">ဝင်ငွေ</button>
+            `;
+            showSelectionModal('အမျိုးအစား ရွေးချယ်ပါ', content);
+            selectionModalContent.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    selectedTransactionType = e.target.dataset.type;
+                    selectedTypeValue.textContent = selectedTransactionType === 'expense' ? 'ထွက်ငွေ' : 'ဝင်ငွေ';
+                    hideSelectionModal();
+                });
+            });
+        });
+
+        selectCategoryBtn.addEventListener('click', () => {
+            if (categories.length === 0) {
+                showCustomModal('သတိပေးချက်', 'အမျိုးအစားများ မရှိသေးပါ။ "အမျိုးအစား" စာမျက်နှာမှ ထည့်သွင်းပါ။', () => { hideSelectionModal(); }, null);
+                return;
+            }
+            let content = categories.map(cat => `
+                <button class="w-full py-3 px-4 text-left rounded-lg text-gray-800 bg-gray-100 hover:bg-gray-200 transition duration-200 ${selectedTransactionCategory === cat ? 'bg-green-200' : ''}" data-category="${cat}">${cat}</button>
+            `).join('');
+            
+            showSelectionModal('အမျိုးအစားခွဲ ရွေးချယ်ပါ', content);
+            selectionModalContent.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    selectedTransactionCategory = e.target.dataset.category;
+                    selectedCategoryValue.textContent = selectedTransactionCategory;
+                    hideSelectionModal();
+                });
+            });
+        });
+        
+        selectDateBtn.addEventListener('click', () => {
+            const todayDate = getCurrentDate();
+            const yesterdayDate = getYesterdayDate();
+            
+            const content = `
+                <button class="w-full py-3 text-lg font-semibold rounded-lg mb-3 ${selectedTransactionDate === todayDate ? 'bg-orange-600 text-white' : 'bg-orange-400 text-white'}" data-date="${todayDate}">ယနေ့</button>
+                <button class="w-full py-3 text-lg font-semibold rounded-lg mb-3 ${selectedTransactionDate === yesterdayDate ? 'bg-orange-600 text-white' : 'bg-orange-400 text-white'}" data-date="${yesterdayDate}">မနေ့က</button>
+                <div class="my-4">
+                    <label for="date-picker" class="block text-sm font-medium text-gray-700 mb-2">အခြားရက်စွဲတစ်ခု ရွေးချယ်ပါ</label>
+                    <input type="date" id="date-picker" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-blue-400 focus:border-blue-400 shadow-sm">
+                </div>
+            `;
+            showSelectionModal('ရက်စွဲ ရွေးချယ်ပါ', content);
+            
+            const datePicker = document.getElementById('date-picker');
+            datePicker.value = selectedTransactionDate;
+            datePicker.addEventListener('change', (e) => {
+                selectedTransactionDate = e.target.value;
+                selectedDateValue.textContent = selectedTransactionDate;
+                hideSelectionModal();
+            });
+            
+            selectionModalContent.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    selectedTransactionDate = e.target.dataset.date;
+                    selectedDateValue.textContent = e.target.textContent;
+                    hideSelectionModal();
+                });
+            });
+        });
+
+        selectionModalClose.addEventListener('click', hideSelectionModal);
+
+        addCategoryBtn.addEventListener('click', async () => {
+            const newCat = newCategoryInput.value.trim();
+            if (!authReady || !groupId) {
+                showCustomModal('သတိပေးချက်', 'အမျိုးအစားထည့်သွင်းရန် အုပ်စုအမည်ကို အရင်သတ်မှတ်ပါ။', showUsernameModal, () => {});
+                return;
+            }
+            if (newCat && !categories.includes(newCat)) {
+                try {
+                    await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId).collection('categories').add({ name: newCat });
+                    newCategoryInput.value = '';
+                } catch (error) {
+                    console.error("Error adding category: ", error);
+                    showCustomModal('အမှား', 'အမျိုးအစား ထည့်၍ မရပါ။ ကျေးဇူးပြု၍ ပြန်လည်စမ်းသပ်ပါ။', () => {}, null);
+                }
+            } else if (categories.includes(newCat)) {
+                showCustomModal('အမှား', 'ဤအမျိုးအစား ရှိပြီးသားဖြစ်ပါသည်။', () => {}, null);
+            }
+        });
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                showScreen(button.dataset.screen);
+            });
+        });
+
+        filterMonthEl.addEventListener('change', renderAllTransactions);
+        filterCategoryEl.addEventListener('change', renderAllTransactions);
+        reportMonthSelectEl.addEventListener('change', updateReports);
+
+        editUserBtn.addEventListener('click', () => {
+            showUsernameModal();
+            const currentName = userNameDisplay.textContent;
+            usernameInput.value = currentName === 'ဧည့်သည်' ? '' : currentName;
+        });
+
+        saveUsernameBtn.addEventListener('click', saveUsername);
+        cancelUsernameBtn.addEventListener('click', hideUsernameModal);
+
+        document.getElementById('username-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                saveUsername();
+            }
+        });
+                const music = document.getElementById('background-music');
+        const playMusicBtn = document.getElementById('play-music-btn');
+
+        let isPlaying = false;
+        playMusicBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                music.pause();
+                isPlaying = false;
+                playMusicBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9v6m-4.5 0V9m7.5-3v12m-9-12v12m-3-6h2.25M3.75 12h7.5M10.5 12a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zM18 12a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>';
+            } else {
+                music.play();
+                isPlaying = true;
+                playMusicBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.923a.75.75 0 01-.142 1.06l-3.114 3.115a.75.75 0 01-1.06 0L10.057 7.06a.75.75 0 01.142-1.06L13.171 2.89a.75.75 0 011.06 0l3.114 3.114zM12.924 15.077a.75.75 0 01-.142 1.06l-3.114 3.114a.75.75 0 01-1.06 0L5.057 16.06a.75.75 0 01.142-1.06l3.114-3.114a.75.75 0 011.06 0l3.114 3.114zM12 12a1 1 0 110-2 1 1 0 010 2zM6 12a1 1 0 110-2 1 1 0 010 2zM18 12a1 1 0 110-2 1 1 0 010 2z" /></svg>';
+            }
+        });
+
+    </script>
+</body>
+</html>
