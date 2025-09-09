@@ -4,26 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MMHအိမ်သုံးစရိတ်</title>
-<audio id="background-music" src="MMH.mp3" loop></audio>
+    <audio id="click-sound" src="MMH4.mp3"></audio>
+    <audio id="background-music" src="MMH.mp3" loop></audio>
+    <audio id="error-sound" src="MMH3.mp3"></audio>
 
-<button id="play-music-btn" class="fixed bottom-24 right-4 z-50 p-3 bg-gray-800 text-white rounded-full shadow-lg">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.923a.75.75 0 01-.142 1.06l-3.114 3.115a.75.75 0 01-1.06 0L10.057 7.06a.75.75 0 01.142-1.06L13.171 2.89a.75.75 0 011.06 0l3.114 3.114zM12.924 15.077a.75.75 0 01-.142 1.06l-3.114 3.114a.75.75 0 01-1.06 0L5.057 16.06a.75.75 0 01.142-1.06l3.114-3.114a.75.75 0 011.06 0l3.114 3.114zM12 12a1 1 0 110-2 1 1 0 010 2zM6 12a1 1 0 110-2 1 1 0 010 2zM18 12a1 1 0 110-2 1 1 0 010 2z" />
-    </svg>
-</button>
+    <div id="splash-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-cover bg-center" style="background-color: #ffffff;">
+        <img id="splash-logo" src="MMH6.jpg" alt="App Logo" class="w-64 h-64 animate-spin-slow opacity-0 transition-opacity duration-1000">
+        <audio id="splash-sound" src="MMH2.mp3"></audio>
+    </div>
 
-
+    <button id="play-music-btn" class="fixed bottom-24 right-4 z-50 p-3 bg-gray-800 text-white rounded-full shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.923a.75.75 0 01-.142 1.06l-3.114 3.115a.75.75 0 01-1.06 0L10.057 7.06a.75.75 0 01.142-1.06L13.171 2.89a.75.75 0 011.06 0l3.114 3.114zM12.924 15.077a.75.75 0 01-.142 1.06l-3.114 3.114a.75.75 0 01-1.06 0L5.057 16.06a.75.75 0 01.142-1.06l3.114-3.114a.75.75 0 011.06 0l3.114 3.114zM12 12a1 1 0 110-2 1 1 0 010 2zM6 12a1 1 0 110-2 1 1 0 010 2zM18 12a1 1 0 110-2 1 1 0 010 2z" />
+        </svg>
+    </button>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <head>
-    <link href=​"https://i.imgur.com/k6lP0a1.png" alt="Permanent Marker font example" width="900">
+    
     <style>
-        /* CSS styles များသည် loading မြန်ဆန်စေရန်အတွက် အနည်းဆုံး ပမာဏဖြင့် ရေးသားထားပါသည်။ */
         html, body {
             height: 100%;
             margin: 0;
@@ -32,7 +34,7 @@
         }
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #e0f7fa; /* Light cyan background */
+            background-color: #e0f7fa;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -53,7 +55,7 @@
             position: relative;
         }
         .main-header {
-            background: linear-gradient(135deg, #008000, #FF0000, #0000FF, #FFFF00, #800080); /* Blue to teal gradient */
+            background: linear-gradient(135deg, #008000, #FF0000, #0000FF, #FFFF00, #800080);
             color: white;
             padding: 0px 30px;
             border-bottom-left-radius: 10px;
@@ -71,29 +73,30 @@
             width: 100%;
         }
         #balance-card {
-    background-color: #1a237e; /* နောက်ခံကို မည်းနက်ရောင်ပြောင်းလိုက်ပါတယ် */
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    text-align: center;
-}
-
-#total-balance {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-top: 0px;
-    letter-spacing: -1px;
-    color: #008000; 
-}
-/* ဒီ code အသစ်ကို အစားထိုးထည့်သွင်းပါ */
-#total-balance.glitter-active {
-    animation: none; /* အရင်က animation ကို ပယ်ဖျက်လိုက်ပါ */
-}
-
-#total-balance span.glitter-active {
-    animation: glitter 0.7s infinite ease-in-out;
-}
-
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            background-image: url('https://img.pikbest.com/origin/06/31/01/20rpIkbEsTgBk.png!sw800');
+            background-repeat: no-repeat;
+            background-size: 120% 230%;
+            background-position: center;
+            background-blend-mode: multiply;
+            padding: 22px; 
+        }
+        #total-balance {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-top: 0px;
+            letter-spacing: -1px;
+        }
+        #total-balance.glitter-active {
+            animation: none;
+        }
+        #total-balance span.glitter-active {
+            animation: glitter 0.7s infinite ease-in-out;
+        }
         .screen {
             display: none;
             flex-grow: 1;
@@ -120,14 +123,14 @@
             align-items: center;
             justify-content: center;
             padding: 16px 0;
-            color: #800080; /* Light grey for inactive */
+            color: #800080;
             font-size: 0.8rem;
             font-weight: 500;
             transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
             border-radius: 16px;
         }
         .nav-button.active {
-            color: #008000; /* Active color */
+            color: #008000;
             background-color: #f0f4f7;
             transform: translateY(-10px);
         }
@@ -170,23 +173,24 @@
             background-color: #b0bec5;
             cursor: not-allowed;
         }
-        /* Loading Spinner */
         .spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            border-left-color: #4a90e2; /* Spinner color */
+            border-left-color: #4a90e2;
             animation: spin 1s linear infinite;
         }
-
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes spin-slow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 20s linear infinite;
         }
         .circular-button {
             width: 100px;
@@ -217,73 +221,30 @@
             padding: 0 5px;
         }
         #selection-modal .bg-white {
-    max-height: 100vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-       #user-name-display {
-    font-family: 'Pacifico', cursive;
-    font-size: 1.5rem; 
-}
-       #user-name-display {
-    font-family: 'Pacifico', cursive;
-    font-size: 2.5rem;
-    text-transform: uppercase; /* ဒီ code ကို ထပ်ထည့်လိုက်ပါ */
-}
-       #username-modal .bg-white {
-    /* ... လက်ရှိ code များ ... */
-     background: linear-gradient(45deg, #FF6B6B, #F6F479, #93C6E7, #A0D8B3);
-}
- @keyframes glitter {
-    0% { color: #ff0000; text-shadow: 0 0 5px #ff0000, 0 0 10px #ff5500; }  /* အနီရောင် */
-    16% { color: #ff5500; text-shadow: 0 0 5px #ff5500, 0 0 10px #ffaa00; }  /* လိမ္မော်ရောင် */
-    33% { color: #ffff00; text-shadow: 0 0 5px #ffff00, 0 0 10px #aaff00; }  /* အဝါရောင် */
-    50% { color: #00ff00; text-shadow: 0 0 5px #00ff00, 0 0 10px #00ffaa; }  /* အစိမ်းရောင် */
-    66% { color: #00aaff; text-shadow: 0 0 5px #00aaff, 0 0 10px #0055ff; }  /* အပြာရောင် */
-    83% { color: #0000ff; text-shadow: 0 0 5px #0000ff, 0 0 10px #aa00ff; }  /* အပြာနုရောင် */
-    100% { color: #ff00ff; text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff0055; } /* ခရမ်းရောင် */
-}
-
-
+            max-height: 100vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        #user-name-display {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+        }
+        #username-modal .bg-white {
+            background: linear-gradient(45deg, #FF6B6B, #F6F479, #93C6E7, #A0D8B3);
+        }
+        @keyframes glitter {
+            0% { color: #ff0000; text-shadow: 0 0 5px #ff0000, 0 0 10px #ff5500; }
+            16% { color: #ff5500; text-shadow: 0 0 5px #ff5500, 0 0 10px #ffaa00; }
+            33% { color: #ffff00; text-shadow: 0 0 5px #ffff00, 0 0 10px #aaff00; }
+            50% { color: #00ff00; text-shadow: 0 0 5px #00ff00, 0 0 10px #00ffaa; }
+            66% { color: #00aaff; text-shadow: 0 0 5px #00aaff, 0 0 10px #0055ff; }
+            83% { color: #0000ff; text-shadow: 0 0 5px #0000ff, 0 0 10px #aa00ff; }
+            100% { color: #ff00ff; text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff0055; }
+        }
         #total-balance.glitter-active {
             animation: glitter 1.5s infinite ease-in-out;
         }
-
-        /* Balance card style adjust */
-        #balance-card {
-            background-color: #000000;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-        }
-        
-        #total-balance {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-top: 0px;
-            letter-spacing: -1px;
-            /* Default color, will be overridden by glitter effect */
-        }
-        #balance-card {
-    /* Existing styles */
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    text-align: center;
-    
-    /* New: Kanoke Pattern */
-    background-image: url('https://img.pikbest.com/origin/06/31/01/20rpIkbEsTgBk.png!sw800');
-    background-repeat: no-repeat;
-    background-size: 120% 230%; /* Puts the image inside the border */
-    background-position: center;
-    background-blend-mode: multiply; /* Make the pattern darker */
-    
-    /* Add a small padding to make the border visible */
-    padding: 22px; 
-}
-
     </style>
 </head>
 <body>
@@ -343,21 +304,20 @@
                 </button>
             </div>
             <form id="transaction-form" class="space-y-5">
-    <div>
-        <label for="transaction-amount" class="block text-sm font-medium text-gray-700 mb-1">ပမာဏ (ကျပ်)</label>
-        <input type="number" id="transaction-amount" placeholder="ဥပမာ: ၅၀၀၀" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-blue-400 focus:border-blue-400 shadow-sm" required>
-    </div>
-
-    <div class="flex items-end space-x-4">
-        <div class="flex-grow">
-            <label for="transaction-description" class="block text-sm font-medium text-gray-700 mb-1">ဖော်ပြချက် (optional)</label>
-            <textarea id="transaction-description" rows="2" placeholder="ဥပမာ: မနက်စာ ထမင်းကြော်" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-blue-400 focus:border-blue-400 shadow-sm"></textarea>
-        </div>
-        <button type="submit" class="w-auto py-6 px-6 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-xl shadow-lg hover:from-blue-600 hover:to-teal-600 transition duration-300">
-            {✓}
-        </button>
-    </div>
-</form>
+                <div>
+                    <label for="transaction-amount" class="block text-sm font-medium text-gray-700 mb-1">ပမာဏ (ကျပ်)</label>
+                    <input type="number" id="transaction-amount" placeholder="ဥပမာ: ၅၀၀၀" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-blue-400 focus:border-blue-400 shadow-sm" required>
+                </div>
+                <div class="flex items-end space-x-4">
+                    <div class="flex-grow">
+                        <label for="transaction-description" class="block text-sm font-medium text-gray-700 mb-1">ဖော်ပြချက် (optional)</label>
+                        <textarea id="transaction-description" rows="2" placeholder="ဥပမာ: မနက်စာ ထမင်းကြော်" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-blue-400 focus:border-blue-400 shadow-sm"></textarea>
+                    </div>
+                    <button type="submit" class="w-auto py-6 px-6 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-xl shadow-lg hover:from-blue-600 hover:to-teal-600 transition duration-300">
+                        {✓}
+                    </button>
+                </div>
+            </form>
             <div class="bottom-space-indicator"></div>
         </div>
 
@@ -482,23 +442,19 @@
     <script defer>
         /*
             *** ဤ Web App ကို ပိုမိုမြန်ဆန်အောင် ဖန်တီးထားပုံ ***
-
             ၁. Vanilla JS နှင့် CDN Links
             - ဤ App သည် build process ရှုပ်ထွေးသော React.js, Next.js ကဲ့သို့သော Framework များကို ရှောင်ရှားထားပါသည်။
             - Firebase library များနှင့် Tailwind CSS တို့ကို CDN (Content Delivery Network) မှတဆင့် တိုက်ရိုက် load လုပ်ပါသည်။
             - အကျိုးကျေးဇူး: သုံးစွဲသူ၏ browser သည် ဤ links များကို cache လုပ်ထားပါက နောက်တစ်ခေါက် ဖွင့်ချိန်တွင် ထပ် download လုပ်ရန် မလိုတော့ပါ။ build process မရှိသည့်အတွက် code ကို minify, bundle လုပ်စရာမလိုဘဲ တိုက်ရိုက် run နိုင်သောကြောင့် loading time သိသိသာသာ လျော့ကျစေပါသည်။
-
             ၂. Firebase Firestore Database
             - အချက်အလက်များကို Firebase Firestore ဟုခေါ်သော real-time cloud database တွင် သိမ်းဆည်းပါသည်။
             - အကျိုးကျေးဇူး: Firebase ရဲ့ onSnapshot() function ကို အသုံးပြုထားသောကြောင့် database မှ အချက်အလက်များ အပြောင်းအလဲရှိသည်နှင့် App ရဲ့ UI ကို ချက်ချင်း update လုပ်ပေးပါသည်။ ထို့ကြောင့် သုံးစွဲသူသည် loading bar ကို ကြာကြာစောင့်ဆိုင်းရန် မလိုအပ်ဘဲ မြန်ဆန်သော အတွေ့အကြုံကို ရရှိပါသည်။
-
             ၃. Tailwind CSS (Just-in-Time Mode)
             - UI design အတွက် Tailwind CSS ကို CDN link ဖြင့် အသုံးပြုထားပါသည်။
             - အကျိုးကျေးဇူး: ဤနည်းလမ်းသည် App တွင် တကယ်လိုအပ်သော CSS styles များကိုသာ dynamically generate လုပ်ပေးပါသည်။ ထို့ကြောင့် CSS file size သေးငယ်ပြီး မြန်မြန်ဆန်ဆန် loading လုပ်နိုင်ကာ UI ကို ချက်ချင်းမြင်ရစေပါသည်။
-
             အတိုချုပ်အားဖြင့်၊ ဤ App သည် "Simple Stack for Maximum Performance" (အမြန်ဆုံးစွမ်းဆောင်ရည်အတွက် ရိုးရှင်းသည့် နည်းပညာများ) ကို အသုံးပြုထားသောကြောင့် build process မရှိခြင်း၊ code base သေးငယ်ခြင်းနှင့် real-time data fetching တို့ကြောင့် သာမန် web app တွေထက် သိသိသာသာ မြန်ဆန်နေခြင်း ဖြစ်ပါသည်။
         */
-        
+
         // DOM Elements
         const totalBalanceEl = document.getElementById('total-balance');
         const screens = document.querySelectorAll('.screen');
@@ -533,12 +489,9 @@
         const saveUsernameBtn = document.getElementById('save-username-btn');
         const cancelUsernameBtn = document.getElementById('cancel-username-btn');
         const transactionSubmitBtn = document.querySelector('#transaction-form button[type="submit"]');
-
-        // New: Daily Summary DOM Elements
+        const errorSound = document.getElementById('error-sound');
         const dailyIncomeEl = document.getElementById('daily-income');
         const dailyExpenseEl = document.getElementById('daily-expense');
-        
-        // New: UI elements for add-transaction screen
         const selectTypeBtn = document.getElementById('select-type-btn');
         const selectedTypeValue = document.getElementById('selected-type-value');
         const selectCategoryBtn = document.getElementById('select-category-btn');
@@ -549,6 +502,11 @@
         const selectionModalTitle = document.getElementById('selection-modal-title');
         const selectionModalContent = document.getElementById('selection-modal-content');
         const selectionModalClose = document.getElementById('selection-modal-close');
+        
+        // New: Splash Screen Elements
+        const splashScreen = document.getElementById('splash-screen');
+        const splashLogo = document.getElementById('splash-logo');
+        const splashSound = document.getElementById('splash-sound');
         
         // Global data and state
         let db = null;
@@ -563,8 +521,7 @@
         let transactionUnsubscribe = null;
         let categoriesUnsubscribe = null;
 
-        // New: State for the new input method
-        let selectedTransactionType = 'expense'; // default
+        let selectedTransactionType = 'expense';
         let selectedTransactionCategory = '';
         let selectedTransactionDate = getCurrentDate();
         
@@ -584,7 +541,6 @@
         function formatCurrency(amount) {
             return `${amount.toLocaleString()} `;
         }
-
         function getCurrentDate() {
             const today = new Date();
             const year = today.getFullYear();
@@ -592,7 +548,6 @@
             const day = String(today.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
         }
-        
         function getYesterdayDate() {
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
@@ -601,7 +556,6 @@
             const day = String(yesterday.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
         }
-        
         function getMyanmarMonthName(monthIndex) {
             const months = [
                 'ဇန်နဝါရီ', 'ဖေဖော်ဝါရီ', 'မတ်', 'ဧပြီ', 'မေ', 'ဇွန်',
@@ -618,12 +572,10 @@
                     return;
                 }
             }
-
             screens.forEach(screen => {
                 screen.classList.remove('active');
             });
             document.getElementById(screenId).classList.add('active');
-
             navButtons.forEach(button => {
                 if (button.dataset.screen === screenId) {
                     button.classList.add('active');
@@ -631,7 +583,6 @@
                     button.classList.remove('active');
                 }
             });
-
             if (screenId === 'add-transaction-screen') {
                 updateAddTransactionScreenUI();
             } else if (screenId === 'transactions-list-screen') {
@@ -645,16 +596,13 @@
                 renderCategoryList();
             }
         }
-        
         function updateAddTransactionScreenUI() {
             selectedTypeValue.textContent = selectedTransactionType === 'expense' ? 'ထွက်ငွေ' : 'ဝင်ငွေ';
             selectedCategoryValue.textContent = selectedTransactionCategory || 'ရွေးပါ';
-            
             const displayDate = new Date(selectedTransactionDate);
             const today = new Date();
             const yesterday = new Date();
             yesterday.setDate(today.getDate() - 1);
-
             let dateText = selectedTransactionDate;
             if (displayDate.toDateString() === today.toDateString()) {
                 dateText = 'ယနေ့';
@@ -663,11 +611,9 @@
             }
             selectedDateValue.textContent = dateText;
         }
-
-                                function updateTotalBalance() {
+        function updateTotalBalance() {
             let totalIncome = 0;
             let totalExpense = 0;
-
             transactions.forEach(t => {
                 if (t.type === 'income') {
                     totalIncome += t.amount;
@@ -675,21 +621,14 @@
                     totalExpense += t.amount;
                 }
             });
-
             const balance = totalIncome - totalExpense;
             const formattedBalance = formatCurrency(balance);
-
-            // လက်ရှိ HTML ကို ရှင်းလင်းလိုက်ပါ
             totalBalanceEl.innerHTML = '';
-            
-            // ဂဏန်းတလုံးချင်းစီကို စစ်ဆေးပြီး သီးခြား animation ပေးပါ
             for (let i = 0; i < formattedBalance.length; i++) {
                 const char = formattedBalance[i];
                 const span = document.createElement('span');
                 span.textContent = char;
-                span.style.animationDelay = `${i * 0.1}s`; // တစ်လုံးချင်းစီအတွက် animation delay ပေးပါ
-
-                // အရောင်နဲ့ glitter effect ထည့်သွင်းပါ
+                span.style.animationDelay = `${i * 0.1}s`;
                 if (balance > 0) {
                     span.classList.add('glitter-active', 'text-green-600');
                 } else if (balance < 0) {
@@ -697,19 +636,13 @@
                 } else {
                     span.classList.add('text-gray-900');
                 }
-
                 totalBalanceEl.appendChild(span);
             }
         }
-
-
-
-        // New function to update the daily summary
         function updateDailySummary() {
             const today = getCurrentDate();
             let dailyIncome = 0;
             let dailyExpense = 0;
-
             transactions.forEach(t => {
                 if (t.date === today) {
                     if (t.type === 'income') {
@@ -719,24 +652,20 @@
                     }
                 }
             });
-
             dailyIncomeEl.textContent = formatCurrency(dailyIncome);
             dailyExpenseEl.textContent = formatCurrency(dailyExpense);
         }
-
         function renderRecentTransactions() {
             recentTransactionsEl.innerHTML = '';
             if (transactions.length === 0) {
                 recentTransactionsEl.innerHTML = '<p class="text-gray-500 text-center mt-8">မှတ်တမ်းများ မရှိသေးပါ</p>';
                 return;
             }
-
             transactions.slice(0, 5).forEach(t => {
                 const transactionItem = document.createElement('div');
                 transactionItem.classList.add('transaction-item', 'flex', 'justify-between', 'items-center', 'p-4');
                 const amountClass = t.type === 'income' ? 'text-green-600' : 'text-red-600';
                 const sign = t.type === 'income' ? '+' : '-';
-
                 transactionItem.innerHTML = `
                     <div>
                         <div class="font-medium text-gray-800">${t.category}</div>
@@ -748,14 +677,11 @@
                 recentTransactionsEl.appendChild(transactionItem);
             });
         }
-
         function renderAllTransactions() {
             allTransactionsEl.innerHTML = '';
             let filteredTransactions = transactions;
-
             const selectedMonth = filterMonthEl.value;
             const selectedCategory = filterCategoryEl.value;
-
             if (selectedMonth) {
                 filteredTransactions = filteredTransactions.filter(t => {
                     const transactionDate = new Date(t.date);
@@ -765,16 +691,13 @@
                     return transactionMonth === filterMonth && transactionYear === filterYear;
                 });
             }
-
             if (selectedCategory) {
                 filteredTransactions = filteredTransactions.filter(t => t.category === selectedCategory);
             }
-
             if (filteredTransactions.length === 0) {
                 allTransactionsEl.innerHTML = '<p class="text-gray-500 text-center mt-8">မှတ်တမ်းများ မရှိသေးပါ</p>';
                 return;
             }
-
             const groupedTransactions = filteredTransactions.reduce((acc, t) => {
                 const date = t.date;
                 if (!acc[date]) {
@@ -783,21 +706,17 @@
                 acc[date].push(t);
                 return acc;
             }, {});
-
             const sortedDates = Object.keys(groupedTransactions).sort((a, b) => new Date(b) - new Date(a));
-
             sortedDates.forEach(date => {
                 const dateHeader = document.createElement('div');
                 dateHeader.classList.add('text-sm', 'font-semibold', 'text-gray-600', 'mt-4', 'mb-2', 'border-b', 'pb-1');
                 dateHeader.textContent = date;
                 allTransactionsEl.appendChild(dateHeader);
-
                 groupedTransactions[date].forEach(t => {
                     const transactionItem = document.createElement('div');
                     transactionItem.classList.add('transaction-item', 'flex', 'justify-between', 'items-center', 'p-4');
                     const amountClass = t.type === 'income' ? 'text-green-600' : 'text-red-600';
                     const sign = t.type === 'income' ? '+' : '-';
-
                     transactionItem.innerHTML = `
                         <div>
                             <div class="font-medium text-gray-800">${t.category}</div>
@@ -815,7 +734,6 @@
                     allTransactionsEl.appendChild(transactionItem);
                 });
             });
-
             document.querySelectorAll('.delete-transaction-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const transactionId = e.currentTarget.dataset.id;
@@ -828,7 +746,6 @@
                 });
             });
         }
-
         async function deleteTransaction(id) {
             try {
                 if (!authReady || !groupId) {
@@ -843,7 +760,6 @@
                 showCustomModal('အမှား', 'မှတ်တမ်းဖျက်၍ မရပါ။ ကျေးဇူးပြု၍ ပြန်လည်စမ်းသပ်ပါ။', () => {}, null);
             }
         }
-        
         function populateFilterCategories() {
             filterCategoryEl.innerHTML = '';
             const allOption = document.createElement('option');
@@ -857,7 +773,6 @@
                 filterCategoryEl.appendChild(option);
             });
         }
-
         function populateFilterMonths() {
             filterMonthEl.innerHTML = '<option value="">လ အားလုံး</option>';
             const monthsSet = new Set();
@@ -867,14 +782,12 @@
                 const month = date.getMonth();
                 monthsSet.add(`${year}-${month}`);
             });
-
             const sortedMonths = Array.from(monthsSet).sort((a, b) => {
                 const [yearA, monthA] = a.split('-').map(Number);
                 const [yearB, monthB] = b.split('-').map(Number);
                 if (yearA !== yearB) return yearB - yearA;
                 return monthB - monthA;
             });
-
             sortedMonths.forEach(monthKey => {
                 const [year, monthIndex] = monthKey.split('-').map(Number);
                 const option = document.createElement('option');
@@ -883,7 +796,6 @@
                 filterMonthEl.appendChild(option);
             });
         }
-
         function populateReportMonths() {
             reportMonthSelectEl.innerHTML = '';
             const monthsSet = new Set();
@@ -893,14 +805,12 @@
                 const month = date.getMonth();
                 monthsSet.add(`${year}-${month}`);
             });
-
             const sortedMonths = Array.from(monthsSet).sort((a, b) => {
                 const [yearA, monthA] = a.split('-').map(Number);
                 const [yearB, monthB] = b.split('-').map(Number);
                 if (yearA !== yearB) return yearB - yearA;
                 return monthB - monthA;
             });
-
             if (sortedMonths.length === 0) {
                 const currentMonth = new Date();
                 const currentYear = currentMonth.getFullYear();
@@ -919,7 +829,6 @@
                 });
             }
         }
-
         function updateReports() {
             const selectedMonthKey = reportMonthSelectEl.value;
             if (!selectedMonthKey) {
@@ -929,18 +838,14 @@
                 categoryExpenseListEl.innerHTML = '';
                 return;
             }
-
             const [selectedYear, selectedMonthIndex] = selectedMonthKey.split('-').map(Number);
-
             const monthlyTransactions = transactions.filter(t => {
                 const date = new Date(t.date);
                 return date.getFullYear() === selectedYear && date.getMonth() === selectedMonthIndex;
             });
-
             let totalIncome = 0;
             let totalExpense = 0;
             const categoryExpenses = {};
-
             monthlyTransactions.forEach(t => {
                 if (t.type === 'income') {
                     totalIncome += t.amount;
@@ -949,25 +854,20 @@
                     categoryExpenses[t.category] = (categoryExpenses[t.category] || 0) + t.amount;
                 }
             });
-
             reportTotalIncomeEl.textContent = formatCurrency(totalIncome);
             reportTotalExpenseEl.textContent = formatCurrency(totalExpense);
-
             renderCategoryExpenseChart(categoryExpenses, totalExpense);
             renderCategoryExpenseList(categoryExpenses);
         }
-
         function renderCategoryExpenseChart(data, totalExpense) {
             categoryExpenseChartEl.innerHTML = '';
             if (Object.keys(data).length === 0 || totalExpense === 0) {
                 categoryExpenseChartEl.innerHTML = '<p>အချက်အလက် မရှိသေးပါ</p>';
                 return;
             }
-
             const sortedCategories = Object.entries(data).sort(([, a], [, b]) => b - a);
             const chartContainer = document.createElement('div');
             chartContainer.classList.add('w-full', 'h-full', 'flex', 'flex-col', 'justify-end', 'p-2');
-
             sortedCategories.forEach(([category, amount]) => {
                 const percentage = (amount / totalExpense) * 100;
                 const bar = document.createElement('div');
@@ -983,15 +883,12 @@
             });
             categoryExpenseChartEl.appendChild(chartContainer);
         }
-
         function renderCategoryExpenseList(data) {
             categoryExpenseListEl.innerHTML = '';
             if (Object.keys(data).length === 0) {
                 return;
             }
-
             const sortedCategories = Object.entries(data).sort(([, a], [, b]) => b - a);
-
             sortedCategories.forEach(([category, amount]) => {
                 const listItem = document.createElement('div');
                 listItem.classList.add('transaction-item', 'flex', 'justify-between', 'items-center', 'p-3');
@@ -1002,7 +899,6 @@
                 categoryExpenseListEl.appendChild(listItem);
             });
         }
-
         function renderCategoryList() {
             categoryListEl.innerHTML = '';
             if (categories.length === 0) {
@@ -1022,7 +918,6 @@
                 `;
                 categoryListEl.appendChild(categoryItem);
             });
-
             document.querySelectorAll('.delete-category-btn').forEach(button => {
                 button.addEventListener('click', async (e) => {
                     const categoryToDelete = e.currentTarget.dataset.category;
@@ -1034,7 +929,6 @@
                 });
             });
         }
-
         async function deleteCategory(catToDelete) {
             try {
                 if (!authReady || !groupId) {
@@ -1052,16 +946,17 @@
                 showCustomModal('အမှား', 'အမျိုးအစား ဖျက်၍ မရပါ။ ကျေးဇူးပြု၍ ပြန်လည်စမ်းသပ်ပါ။', () => {}, null);
             }
         }
-
         function showCustomModal(title, message, onConfirm, onCancel) {
             modalTitle.textContent = title;
             modalMessage.textContent = message;
             customModal.classList.remove('hidden');
+            if (title === 'အမှား' || title === 'သတိပေးချက်') {
+                errorSound.play().catch(e => console.log('Audio playback failed:', e));
+            }
             modalConfirmBtn.onclick = () => {
                 customModal.classList.add('hidden');
                 if (onConfirm) onConfirm();
             };
-
             if (onCancel) {
                 modalCancelBtn.style.display = 'inline-block';
                 modalCancelBtn.onclick = () => {
@@ -1072,34 +967,26 @@
                 modalCancelBtn.style.display = 'none';
             }
         }
-
         function showUsernameModal() {
             usernameModal.classList.remove('hidden');
         }
-
         function hideUsernameModal() {
             usernameModal.classList.add('hidden');
         }
-
         function showSelectionModal(title, content) {
             selectionModalTitle.textContent = title;
             selectionModalContent.innerHTML = content;
             selectionModal.classList.remove('hidden');
         }
-
         function hideSelectionModal() {
             selectionModal.classList.add('hidden');
         }
-
         function subscribeToData() {
             if (!groupId) return;
-
             if (transactionUnsubscribe) transactionUnsubscribe();
             if (categoriesUnsubscribe) categoriesUnsubscribe();
-
             const groupTransactionsCollection = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId).collection('transactions');
             const groupCategoriesCollection = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId).collection('categories');
-
             transactionUnsubscribe = groupTransactionsCollection.onSnapshot((querySnapshot) => {
                 transactions = [];
                 querySnapshot.forEach((d) => {
@@ -1112,7 +999,6 @@
             }, (error) => {
                 console.error("Error fetching transactions: ", error);
             });
-
             categoriesUnsubscribe = groupCategoriesCollection.onSnapshot((querySnapshot) => {
                 categories = [];
                 querySnapshot.forEach((d) => {
@@ -1130,18 +1016,15 @@
                 console.error("Error fetching categories: ", error);
             });
         }
-
         async function saveUsername() {
             const newUsername = usernameInput.value.trim().toLowerCase();
             if (!newUsername) {
                 showCustomModal('သတိပေးချက်', 'အုပ်စုအမည် (Nickname) ကို ထည့်သွင်းရန် လိုအပ်ပါသည်။', () => {}, null);
                 return;
             }
-
             try {
                 const groupDocRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(newUsername);
                 const groupDoc = await groupDocRef.get();
-
                 if (groupDoc.exists) {
                     await groupDocRef.update({
                         members: firebase.firestore.FieldValue.arrayUnion(userId)
@@ -1153,7 +1036,6 @@
                         createdAt: new Date().toISOString()
                     });
                 }
-
                 groupId = newUsername;
                 username = newUsername;
                 localStorage.setItem('groupId', newUsername);
@@ -1162,13 +1044,11 @@
                 subscribeToData();
                 hideUsernameModal();
                 console.log("Username/Group saved successfully.");
-
             } catch (error) {
                 console.error("Error saving username/group:", error);
                 showCustomModal('အမှား', 'အုပ်စုအမည်သိမ်း၍မရပါ။ ကျေးဇူးပြု၍ နောက်တစ်ကြိမ် ထပ်မံကြိုးစားပါ။', () => {}, null);
             }
         }
-
         async function clearAllDataAndResetUser() {
             showCustomModal(
                 'All Delete',
@@ -1179,19 +1059,14 @@
                            showCustomModal('သတိပေးချက်', 'ဖျက်စရာ အုပ်စုအချက်အလက်မရှိပါ။', () => {}, null);
                            return;
                         }
-
                         const categoriesColRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId).collection('categories');
                         const transactionsColRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId).collection('transactions');
                         const groupDocRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId);
-
                         const categoryDocs = await categoriesColRef.get();
                         for (const d of categoryDocs.docs) { await d.ref.delete(); }
-
                         const transactionDocs = await transactionsColRef.get();
                         for (const d of transactionDocs.docs) { await d.ref.delete(); }
-
                         await groupDocRef.delete();
-
                         groupId = null;
                         username = 'ဧည့်သည်';
                         localStorage.removeItem('groupId');
@@ -1200,10 +1075,8 @@
                         transactions = [];
                         categories = [];
                         updateAllUI();
-
                         console.log("All group data successfully deleted.");
                         hideUsernameModal();
-
                     } catch (error) {
                         console.error("Error clearing data:", error);
                         showCustomModal('အမှား', 'အချက်အလက်များ ဖျက်၍မရပါ။ ကျေးဇူးပြု၍ နောက်တစ်ကြိမ် ထပ်မံကြိုးစားပါ။', () => {}, null);
@@ -1214,7 +1087,6 @@
                 }
             );
         }
-
         function startApp() {
             showScreen('dashboard-screen');
             loadingOverlay.classList.add('hidden');
@@ -1225,7 +1097,6 @@
                 updateCategoriesUI();
             }
         }
-
         function updateAllUI() {
             updateTotalBalance();
             updateDailySummary();
@@ -1234,9 +1105,8 @@
             populateFilterMonths();
             populateReportMonths();
             updateReports();
-            updateAddTransactionScreenUI(); // New call
+            updateAddTransactionScreenUI();
         }
-
         function updateCategoriesUI() {
             populateFilterCategories();
             renderCategoryList();
@@ -1244,62 +1114,71 @@
 
         // Event Listeners
         window.addEventListener('load', () => {
-            if (typeof firebase !== 'undefined' && typeof firebase.firestore !== 'undefined') {
-                try {
-                    const firebaseApp = firebase.initializeApp(firebaseConfig);
-                    db = firebase.firestore();
-                    auth = firebase.auth();
-                    db.settings({
-                        timestampsInSnapshots: true
-                    });
-                    
-                    auth.onAuthStateChanged(async (user) => {
-                        if (user) {
-                            userId = user.uid;
-                            authReady = true;
-
-                            const storedGroupId = localStorage.getItem('groupId');
-                            if (storedGroupId) {
-                                const groupDocRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(storedGroupId);
-                                const groupDoc = await groupDocRef.get();
-                                if (groupDoc.exists) {
-                                    groupId = storedGroupId;
-                                    username = storedGroupId;
-                                    userIdDisplay.textContent = `ID:- ${groupId}`;
-                                    userNameDisplay.textContent = username;
-                                } else {
-                                    localStorage.removeItem('groupId');
+            // Show splash screen and play sound
+            splashScreen.style.display = 'flex';
+            setTimeout(() => {
+                splashLogo.classList.remove('opacity-0');
+                splashSound.play().catch(e => console.log('Splash sound playback failed:', e));
+            }, 100);
+            
+            // Hide splash screen after 3 seconds and start the app
+            setTimeout(() => {
+                splashScreen.classList.add('opacity-0');
+                setTimeout(() => {
+                    splashScreen.style.display = 'none';
+                }, 1000);
+                
+                // Original app start logic goes here
+                if (typeof firebase !== 'undefined' && typeof firebase.firestore !== 'undefined') {
+                    try {
+                        const firebaseApp = firebase.initializeApp(firebaseConfig);
+                        db = firebase.firestore();
+                        auth = firebase.auth();
+                        db.settings({
+                            timestampsInSnapshots: true
+                        });
+                        auth.onAuthStateChanged(async (user) => {
+                            if (user) {
+                                userId = user.uid;
+                                authReady = true;
+                                const storedGroupId = localStorage.getItem('groupId');
+                                if (storedGroupId) {
+                                    const groupDocRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(storedGroupId);
+                                    const groupDoc = await groupDocRef.get();
+                                    if (groupDoc.exists) {
+                                        groupId = storedGroupId;
+                                        username = storedGroupId;
+                                        userIdDisplay.textContent = `ID:- ${groupId}`;
+                                        userNameDisplay.textContent = username;
+                                    } else {
+                                        localStorage.removeItem('groupId');
+                                    }
+                                }
+                                if (groupId) {
+                                    subscribeToData();
+                                }
+                                startApp();
+                            } else {
+                                try {
+                                    await auth.signInAnonymously();
+                                } catch (error) {
+                                    loadingText.textContent = 'လော့ဂ်အင်ဝင်၍ မရပါ။ ကျေးဇူးပြု၍ console ကိုစစ်ဆေးပါ။';
+                                    console.error("Firebase Auth failed:", error);
                                 }
                             }
-
-                            if (groupId) {
-                                subscribeToData();
-                            }
-                            startApp();
-
-                        } else {
-                            try {
-                                await auth.signInAnonymously();
-                            } catch (error) {
-                                loadingText.textContent = 'လော့ဂ်အင်ဝင်၍ မရပါ။ ကျေးဇူးပြု၍ console ကိုစစ်ဆေးပါ။';
-                                console.error("Firebase Auth failed:", error);
-                            }
-                        }
-                    });
-
-                } catch (e) {
-                    loadingText.textContent = "Firebase အစပျိုးရာတွင် အမှားအယွင်းရှိပါသည်။ console ကိုစစ်ဆေးပါ။";
-                    console.error("Firebase initialization failed:", e);
+                        });
+                    } catch (e) {
+                        loadingText.textContent = "Firebase အစပျိုးရာတွင် အမှားအယွင်းရှိပါသည်။ console ကိုစစ်ဆေးပါ။";
+                        console.error("Firebase initialization failed:", e);
+                    }
+                } else {
+                    loadingText.textContent = "Firebase script များ loading မလုပ်နိုင်ပါ။";
                 }
-            } else {
-                loadingText.textContent = "Firebase script များ loading မလုပ်နိုင်ပါ။";
-            }
+            }, 5000); // 3 seconds before hiding the splash screen
         });
-
         transactionForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             transactionSubmitBtn.disabled = true;
-
             try {
                 if (!authReady || !groupId) {
                     showCustomModal('သတိပေးချက်', 'မှတ်တမ်းမထည့်မီ အုပ်စုအမည်ကို အရင်သတ်မှတ်ပါ။', showUsernameModal, () => { showScreen('dashboard-screen') });
@@ -1307,7 +1186,6 @@
                 }
                 const amount = parseFloat(transactionAmountEl.value);
                 const description = transactionDescriptionEl.value.trim();
-
                 if (isNaN(amount) || amount <= 0) {
                     showCustomModal('အမှား', 'ပမာဏကို မှန်ကန်စွာ ထည့်သွင်းပါ။', () => {}, null);
                     return;
@@ -1316,7 +1194,6 @@
                     showCustomModal('အမှား', 'အမျိုးအစားကို ရွေးချယ်ပါ။', () => {}, null);
                     return;
                 }
-
                 const newTransaction = {
                     type: selectedTransactionType,
                     amount,
@@ -1326,7 +1203,6 @@
                     timestamp: new Date().toISOString(),
                     username: username
                 };
-
                 await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('groups').doc(groupId).collection('transactions').add(newTransaction);
                 transactionForm.reset();
                 selectedTransactionType = 'expense';
@@ -1334,7 +1210,6 @@
                 selectedTransactionDate = getCurrentDate();
                 updateAddTransactionScreenUI();
                 showScreen('dashboard-screen');
-
             } catch (error) {
                 console.error("Error adding document: ", error);
                 showCustomModal('အမှား', 'မှတ်တမ်းတင်၍ မရပါ။ ကျေးဇူးပြု၍ ပြန်လည်စမ်းသပ်ပါ။', () => {}, null);
@@ -1342,8 +1217,6 @@
                 transactionSubmitBtn.disabled = false;
             }
         });
-        
-        // Event listeners for the new circular buttons
         selectTypeBtn.addEventListener('click', () => {
             const content = `
                 <button class="w-full py-3 text-lg font-semibold rounded-lg text-white mb-3 ${selectedTransactionType === 'expense' ? 'bg-blue-600' : 'bg-blue-400'}" data-type="expense">ထွက်ငွေ</button>
@@ -1358,7 +1231,6 @@
                 });
             });
         });
-
         selectCategoryBtn.addEventListener('click', () => {
             if (categories.length === 0) {
                 showCustomModal('သတိပေးချက်', 'အမျိုးအစားများ မရှိသေးပါ။ "အမျိုးအစား" စာမျက်နှာမှ ထည့်သွင်းပါ။', () => { hideSelectionModal(); }, null);
@@ -1377,7 +1249,6 @@
                 });
             });
         });
-        
         selectDateBtn.addEventListener('click', () => {
             const todayDate = getCurrentDate();
             const yesterdayDate = getYesterdayDate();
@@ -1391,7 +1262,6 @@
                 </div>
             `;
             showSelectionModal('ရက်စွဲ ရွေးချယ်ပါ', content);
-            
             const datePicker = document.getElementById('date-picker');
             datePicker.value = selectedTransactionDate;
             datePicker.addEventListener('change', (e) => {
@@ -1399,7 +1269,6 @@
                 selectedDateValue.textContent = selectedTransactionDate;
                 hideSelectionModal();
             });
-            
             selectionModalContent.querySelectorAll('button').forEach(button => {
                 button.addEventListener('click', (e) => {
                     selectedTransactionDate = e.target.dataset.date;
@@ -1408,9 +1277,7 @@
                 });
             });
         });
-
         selectionModalClose.addEventListener('click', hideSelectionModal);
-
         addCategoryBtn.addEventListener('click', async () => {
             const newCat = newCategoryInput.value.trim();
             if (!authReady || !groupId) {
@@ -1429,34 +1296,28 @@
                 showCustomModal('အမှား', 'ဤအမျိုးအစား ရှိပြီးသားဖြစ်ပါသည်။', () => {}, null);
             }
         });
-
         navButtons.forEach(button => {
             button.addEventListener('click', () => {
                 showScreen(button.dataset.screen);
             });
         });
-
         filterMonthEl.addEventListener('change', renderAllTransactions);
         filterCategoryEl.addEventListener('change', renderAllTransactions);
         reportMonthSelectEl.addEventListener('change', updateReports);
-
         editUserBtn.addEventListener('click', () => {
             showUsernameModal();
             const currentName = userNameDisplay.textContent;
             usernameInput.value = currentName === 'ဧည့်သည်' ? '' : currentName;
         });
-
         saveUsernameBtn.addEventListener('click', saveUsername);
         cancelUsernameBtn.addEventListener('click', hideUsernameModal);
-
         document.getElementById('username-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 saveUsername();
             }
         });
-                const music = document.getElementById('background-music');
+        const music = document.getElementById('background-music');
         const playMusicBtn = document.getElementById('play-music-btn');
-
         let isPlaying = false;
         playMusicBtn.addEventListener('click', () => {
             if (isPlaying) {
@@ -1469,7 +1330,14 @@
                 playMusicBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.923a.75.75 0 01-.142 1.06l-3.114 3.115a.75.75 0 01-1.06 0L10.057 7.06a.75.75 0 01.142-1.06L13.171 2.89a.75.75 0 011.06 0l3.114 3.114zM12.924 15.077a.75.75 0 01-.142 1.06l-3.114 3.114a.75.75 0 01-1.06 0L5.057 16.06a.75.75 0 01.142-1.06l3.114-3.114a.75.75 0 011.06 0l3.114 3.114zM12 12a1 1 0 110-2 1 1 0 010 2zM6 12a1 1 0 110-2 1 1 0 010 2zM18 12a1 1 0 110-2 1 1 0 010 2z" /></svg>';
             }
         });
-
+        const clickSound = document.getElementById('click-sound');
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                clickSound.currentTime = 0;
+                clickSound.play();
+            });
+        });
     </script>
 </body>
 </html>
