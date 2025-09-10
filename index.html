@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MMHအိမ်သုံးစရိတ်</title>
     
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk1NSOG8xN2E2Y210YXlpbmF1dG1hbiIsCiAgInNob3J0X25hbWUiOiAiTU1IIiwKICAiZGVzY3JpcHRpb24iOiAi4YSo4YSC4YSw4YS34YSX4YSm4YSy4YS54YSm4YSu4YSa4YSy4YSu4YSu4YSH4YSs4YSy4YSH4YSu4YSh4YSH4YSu4YSC4YSH4YSu4YSr4YSu4YSu4YS34YSC4YSk4YS54YSw4YS54YSu4YSH4YSu4YSy4YSH4YSr4YS54YSu4YS04YSC4YSv4YSy4YSv4YSa4YSO4YSq4YS34YSX4YSm4YSyIiwKICAic3RhcnRfdXJsIjogIi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNlMGY3ZmEiLAogICJ0aGVtZV9jb2xvciI6ICIjMDA4MDAwIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiL01NSDYuanBnIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9qcGVnIgogICAgfSwKICAgIHsKICAgICAgInNyYyI6ICIvTU1INi5qcGciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL2pwZWciCiAgICB9CiAgXQp9">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/MMH6.jpg">
 
     <audio id="click-sound" src="MMH4.mp3"></audio>
     <audio id="background-music" src="MMH.mp3" loop></audio>
@@ -443,22 +444,6 @@
     </div>
 
     <script defer>
-        /*
-            *** ဤ Web App ကို ပိုမိုမြန်ဆန်အောင် ဖန်တီးထားပုံ ***
-            ၁. Vanilla JS နှင့် CDN Links
-            - ဤ App သည် build process ရှုပ်ထွေးသော React.js, Next.js ကဲ့သို့သော Framework များကို ရှောင်ရှားထားပါသည်။
-            - Firebase library များနှင့် Tailwind CSS တို့ကို CDN (Content Delivery Network) မှတဆင့် တိုက်ရိုက် load လုပ်ပါသည်။
-            - အကျိုးကျေးဇူး: သုံးစွဲသူ၏ browser သည် ဤ links များကို cache လုပ်ထားပါက နောက်တစ်ခေါက် ဖွင့်ချိန်တွင် ထပ် download လုပ်ရန် မလိုတော့ပါ။ build process မရှိသည့်အတွက် code ကို minify, bundle လုပ်စရာမလိုဘဲ တိုက်ရိုက် run နိုင်သောကြောင့် loading time သိသိသာသာ လျော့ကျစေပါသည်။
-            ၂. Firebase Firestore Database
-            - အချက်အလက်များကို Firebase Firestore ဟုခေါ်သော real-time cloud database တွင် သိမ်းဆည်းပါသည်။
-            - အကျိုးကျေးဇူး: Firebase ရဲ့ onSnapshot() function ကို အသုံးပြုထားသောကြောင့် database မှ အချက်အလက်များ အပြောင်းအလဲရှိသည်နှင့် App ရဲ့ UI ကို ချက်ချင်း update လုပ်ပေးပါသည်။ ထို့ကြောင့် သုံးစွဲသူသည် loading bar ကို ကြာကြာစောင့်ဆိုင်းရန် မလိုအပ်ဘဲ မြန်ဆန်သော အတွေ့အကြုံကို ရရှိပါသည်။
-            ၃. Tailwind CSS (Just-in-Time Mode)
-            - UI design အတွက် Tailwind CSS ကို CDN link ဖြင့် အသုံးပြုထားပါသည်။
-            - အကျိုးကျေးဇူး: ဤနည်းလမ်းသည် App တွင် တကယ်လိုအပ်သော CSS styles များကိုသာ dynamically generate လုပ်ပေးပါသည်။ ထို့ကြောင့် CSS file size သေးငယ်ပြီး မြန်မြန်ဆန်ဆန် loading လုပ်နိုင်ကာ UI ကို ချက်ချင်းမြင်ရစေပါသည်။
-            အတိုချုပ်အားဖြင့်၊ ဤ App သည် "Simple Stack for Maximum Performance" (အမြန်ဆုံးစွမ်းဆောင်ရည်အတွက် ရိုးရှင်းသည့် နည်းပညာများ) ကို အသုံးပြုထားသောကြောင့် build process မရှိခြင်း၊ code base သေးငယ်ခြင်းနှင့် real-time data fetching တို့ကြောင့် သာမန် web app တွေထက် သိသိသာသာ မြန်ဆန်နေခြင်း ဖြစ်ပါသည်။
-        */
-
-        // DOM Elements
         const totalBalanceEl = document.getElementById('total-balance');
         const screens = document.querySelectorAll('.screen');
         const navButtons = document.querySelectorAll('.nav-button');
@@ -506,12 +491,10 @@
         const selectionModalContent = document.getElementById('selection-modal-content');
         const selectionModalClose = document.getElementById('selection-modal-close');
         
-        // New: Splash Screen Elements
         const splashScreen = document.getElementById('splash-screen');
         const splashLogo = document.getElementById('splash-logo');
         const splashSound = document.getElementById('splash-sound');
         
-        // Global data and state
         let db = null;
         let auth = null;
         let userId = null;
@@ -528,7 +511,6 @@
         let selectedTransactionCategory = '';
         let selectedTransactionDate = getCurrentDate();
         
-        // Firebase Configuration (DO NOT CHANGE)
         const firebaseConfig = {
             apiKey: "AIzaSyCbXKrJ-4XlafXS9glgys9T5d9ZNSYjwWM",
             authDomain: "mmh-fe555.firebaseapp.com",
@@ -540,7 +522,6 @@
         };
         const appId = "mmh-fe555";
 
-        // --- Utility Functions ---
         function formatCurrency(amount) {
             return `${amount.toLocaleString()} `;
         }
@@ -567,7 +548,6 @@
             return months[monthIndex];
         }
 
-        // --- UI Management ---
         function showScreen(screenId) {
             if (screenId === 'add-transaction-screen' || screenId === 'categories-screen') {
                 if (!groupId) {
@@ -1115,23 +1095,19 @@
             renderCategoryList();
         }
 
-        // Event Listeners
         window.addEventListener('load', () => {
-            // Show splash screen and play sound
             splashScreen.style.display = 'flex';
             setTimeout(() => {
                 splashLogo.classList.remove('opacity-0');
                 splashSound.play().catch(e => console.log('Splash sound playback failed:', e));
             }, 100);
             
-            // Hide splash screen after 3 seconds and start the app
             setTimeout(() => {
                 splashScreen.classList.add('opacity-0');
                 setTimeout(() => {
                     splashScreen.style.display = 'none';
                 }, 1000);
                 
-                // Original app start logic goes here
                 if (typeof firebase !== 'undefined' && typeof firebase.firestore !== 'undefined') {
                     try {
                         const firebaseApp = firebase.initializeApp(firebaseConfig);
@@ -1177,7 +1153,7 @@
                 } else {
                     loadingText.textContent = "Firebase script များ loading မလုပ်နိုင်ပါ။";
                 }
-            }, 5000); // 3 seconds before hiding the splash screen
+            }, 5000);
         });
         transactionForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1344,7 +1320,34 @@
     </script>
 
     <script>
-        // PWA: Service Worker Registration
+        // PWA Manifest and Service Worker in one file
+        const manifest = {
+            "name": "MMHအိမ်သုံးစရိတ်",
+            "short_name": "MMH",
+            "description": "အိမ်သုံးစရိတ်များကို စနစ်တကျမှတ်သားနိုင်ရန် ကူညီပေးသည်",
+            "start_url": "/",
+            "display": "standalone",
+            "background_color": "#e0f7fa",
+            "theme_color": "#008000",
+            "icons": [
+                {
+                    "src": "/MMH6.jpg",
+                    "sizes": "192x192",
+                    "type": "image/jpeg"
+                },
+                {
+                    "src": "/MMH6.jpg",
+                    "sizes": "512x512",
+                    "type": "image/jpeg"
+                }
+            ]
+        };
+        const manifestString = JSON.stringify(manifest);
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = 'data:application/json;base64,' + btoa(manifestString);
+        document.head.appendChild(manifestLink);
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const serviceWorkerCode = `
