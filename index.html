@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MMHအိမ်သုံးစရိတ်</title>
+    
+    <link rel="manifest" href="/manifest.json">
+    
     <audio id="click-sound" src="MMH4.mp3"></audio>
     <audio id="background-music" src="MMH.mp3" loop></audio>
     <audio id="error-sound" src="MMH3.mp3"></audio>
@@ -1339,5 +1342,21 @@
             });
         });
     </script>
+
+    <script>
+        // PWA: Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:text/javascript;base64,Y29uc3QgQ0FDSEVfTkFNRSA9ICdtaW1pLXZwMSc7CmNvbnN0IHVybHNUb0NhY2hlID0gWwogICcvJywKICAnL2luZGV4Lmh0bWwnLAogICcvTU1ILm1wMy9NTUgubXAzJywKICAnL01NSC5tcDMvTU1IMi5tcDMnLAogICcvTU1ILm1wMy9NTUgzLm1wMycsCiAgJy9NTUgubXAzL01NSDQubXAzJywKICAnL01NSC5tcDMvTU1INi5qcGcnLAogICdodHRwczovL2Nkbi50YWlsd2luZGNzLmNvbScsCiAgJ2h0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzMj9mYW1pbHk9UG9wcGluczp3Z2h0QDRwMDs1MDA7NjAwOzcwMCZkaXNwbGF5PXN3YXAnLAogICdodHRwczovL3d3dy5nc3RhdGljLmNvbS9maXJlYmFzZWpzLzguMTAuMS9maXJlYmFzZS1hcHAuanMnLAogICdodHRwczovL3d3dy5nc3RhdGljLmNvbS9maXJlYmFzZWpzLzguMTAuMS9maXJlYmFzZS1hdXRoLmpzJywKICAnaHR0cHM6Ly93d3cuZ3N0YXRpYy5jb20vZmlyZWJhc2Vqcy84LjEwLjEvZmlyZWJhc2UtZmlyZXN0b3JlLmpzJywKICAnaHR0cHM6Ly9pbWcucGlrYmVzdC5jb20vb3JpZ2luLzA2LzMxLzAxLzIwcHBPamJFcy5wbmchc3c4MDAnCn07CnNlbGYuYWRkRXZlbnQoJ2luc3RhbGwnLCBldmVudCA9PiB7CiAgZXZlbnQud2FpdFVudGlsKAogICAgY2FjaGVzLm9wZW4oQ0FDSEVfTkFNRSkKICAgICAgLnRoZW4oY2FjaGUgPT4gewogICAgICAgIGNvbnNvbGUubG9nKCdPcGVuZWQgY2FjaGUnKTsKICAgICAgICByZXR1cm4gY2FjaGUuYWRkQWxsKHVybHNUb0NhY2hlKTsKICAgICAgfSkKICApOwpleGVjdXRlX2NvZGUoKTsKCnNlbGYuYWRkRXZlbnQoJ2ZldGNoJywgZXZlbnQgPT4gewogIGV2ZW50LnJlc3BvbmRXaXRoKAogICAgY2FjaGVzLm1hdGNoKGV2ZW50LnJlcXVlc3QpCiAgICAgIC50aGVuKHJlc3BvbnNlID0+IHsKICAgICAgICBpZiAocmVzcG9uc2UpIHsKICAgICAgICAgIHJldHVybiByZXNwb25zZTsKICAgICAgICB9CiAgICAgICAgcmV0dXJuIGZldGNoKGV2ZW50LnJlcXVlc3QpOwogICAgICB9KQogICk7Cn0pOwoKc2VsZi5hZGRFdmVudCgnYWN0aXZhdGUnLCBldmVudCA9PiB7CiAgY29uc3QgY2FjaGVXaGl0ZWxpc3QgPSBbQ0FDSEVfTkFNRV07CiAgZXZlbnQud2FpdFVudGlsKAogICAgY2FjaGVzLmtleXMoKS50aGVuKGNhY2hlTmFtZXMgPT4gewogICAgICByZXR1cm4gUHJvbWlzZS5hbGwoCiAgICAgICAgY2FjaGVOYW1lcy5tYXAoY2FjaGVOYW1lID0+IHsKICAgICAgICAgIGlmIChjYWNoZVdoaXRlbGlzdC5pbmRleE9mKGNhY2hlTmFtZSkgPT09IC0xKSB7CiAgICAgICAgICAgIHJldHVybiBjYWNoZXMuZGVsZXRlKGNhY2hlTmFtZSk7CiAgICAgICAgICB9CiAgICAgICAgfSkKICAgICk7CiAgfSkKICApOwp9KTsKCnNlbGYuYWRkRXZlbnQoJ2ZldGNoJywgZnVuY3Rpb24oZXZlbnQpIHsKICBjb25zb2xlLmxvZygnW1NlcnZpY2UgV29ya2VyXSBGZXRjaGluZyBzb21ldGhpbmcnKTsKfSk=')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
+
